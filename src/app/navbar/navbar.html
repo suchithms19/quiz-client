@@ -1,7 +1,20 @@
 <nav class="navbar">
   <div class="navbar__content">
     <div class="navbar__menu">
-      <a routerLink="/create-qbank" class="navbar__menu-item">
+      <a 
+        routerLink="/landing" 
+        routerLinkActive="navbar__menu-item--active"
+        class="navbar__menu-item"
+        [routerLinkActiveOptions]="{exact: true}"
+      >
+        Dashboard
+      </a>
+      <a 
+        routerLink="/create-qbank" 
+        routerLinkActive="navbar__menu-item--active"
+        class="navbar__menu-item"
+        [routerLinkActiveOptions]="{exact: false}"
+      >
         Create Qbank
       </a>
     </div>

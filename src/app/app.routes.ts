@@ -1,12 +1,19 @@
 import { Routes } from '@angular/router';
+import { Createbank } from './createbank/createbank';
+import { Landing } from './landing/landing';
 
 export const routes: Routes = [
   {
     path: 'create-qbank',
-    loadComponent: () => import('./createbank/createbank').then(m => m.Createbank)
+    component: Createbank
+  },
+  {
+    path: 'landing',
+    component: Landing
   },
   {
     path: '',
-    loadComponent: () => import('./landing/landing').then(m => m.Landing)
+    redirectTo: '/landing',
+    pathMatch: 'full'
   }
 ];
