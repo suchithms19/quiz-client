@@ -1,3 +1,186 @@
 <div class="createbank">
-  <p>Create Bank</p>
+  <div class="createbank__header">
+    <h1 class="createbank__header-title">Create Quiz Bank</h1>
+  </div>
+
+  <div class="createbank__container">
+    <form class="createbank__form" (ngSubmit)="onSubmit()" #quizForm="ngForm">
+      
+      <div class="createbank__section">
+        <h2 class="createbank__section-title">Quiz Information</h2>
+        
+        <div class="createbank__form-group">
+          <label for="quiz_name" class="createbank__form-group-label">Quiz Name *</label>
+          <input 
+            type="text" 
+            id="quiz_name" 
+            name="quiz_name"
+            [(ngModel)]="quiz_data.name" 
+            required
+            placeholder="Enter quiz name (e.g., JavaScript Basics)"
+            class="createbank__input">
+          <small class="createbank__form-group-hint">Choose a descriptive name for your quiz</small>
+        </div>
+
+        <div class="createbank__form-group">
+          <label for="category" class="createbank__form-group-label">Category *</label>
+          <select 
+            id="category" 
+            name="category"
+            [(ngModel)]="quiz_data.category" 
+            required
+            class="createbank__input">
+            <option value="">Select a category</option>
+            <option value="programming">Programming</option>
+            <option value="mathematics">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="history">History</option>
+            <option value="language">Language</option>
+            <option value="general">General Knowledge</option>
+          </select>
+        </div>
+
+        <div class="createbank__form-group">
+          <label for="status" class="createbank__form-group-label">Status *</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="status" 
+                [value]="true" 
+                [(ngModel)]="quiz_data.status" 
+                required>
+              <span class="radio-custom"></span>
+              Active
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="status" 
+                [value]="false" 
+                [(ngModel)]="quiz_data.status" 
+                required>
+              <span class="radio-custom"></span>
+              Inactive
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="createbank__section">
+        <div class="createbank__section-header">
+          <h2>Questions ({{ quiz_data.questions.length }})</h2>
+          <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
+            + Add Question
+          </button>
+        </div>
+
+        <div class="createbank__questions-list" *ngIf="quiz_data.questions.length > 0">
+          <div 
+            class="createbank__questions-item" 
+            *ngFor="let question of quiz_data.questions; let questionIndex = index">
+            
+            <div class="createbank__questions-header">
+              <h3>Question {{ questionIndex + 1 }}</h3>
+              <button 
+                type="button" 
+                class="createbank__btn createbank__btn--remove" 
+                (click)="removeQuestion(questionIndex)"
+                [disabled]="quiz_data.questions.length <= 1">
+                Remove
+              </button>
+            </div>
+
+            <div class="createbank__form-group">
+              <label [for]="'question_' + questionIndex" class="createbank__form-group-label">Question Text *</label>
+              <textarea 
+                [id]="'question_' + questionIndex"
+                [name]="'question_' + questionIndex"
+                [(ngModel)]="question.description" 
+                required
+                placeholder="Enter your question here..."
+                class="createbank__textarea"
+                rows="3"></textarea>
+            </div>
+
+            <div class="options-section">
+              <h4>Answer Options</h4>
+              
+              <div 
+                class="option-item" 
+                *ngFor="let option of question.options; let optionIndex = index">
+                
+                <div class="option-input-group">
+                  <label class="radio-label">
+                    <input 
+                      type="radio" 
+                      [name]="'correct_' + questionIndex" 
+                      [checked]="option.is_correct"
+                      (change)="setCorrectOption(questionIndex, optionIndex)">
+                    <span class="radio-custom"></span>
+                    Correct
+                  </label>
+                  
+                  <input 
+                    type="text"
+                    [(ngModel)]="option.text"
+                    [name]="'option_' + questionIndex + '_' + optionIndex"
+                    required
+                    placeholder="Enter answer option..."
+                    class="createbank__input option-text">
+                  
+                  <button 
+                    type="button" 
+                    class="createbank__btn createbank__btn--remove" 
+                    (click)="removeOption(questionIndex, optionIndex)"
+                    [disabled]="question.options.length <= 2">
+                    ×
+                  </button>
+                </div>
+              </div>
+
+              <button 
+                type="button" 
+                class="createbank__btn createbank__btn--add-option" 
+                (click)="addOption(questionIndex)">
+                + Add Option
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="quiz_data.questions.length === 0">
+          <p>No questions added yet. Click "Add Question" to get started!</p>
+        </div>
+      </div>
+
+      <div class="createbank__section submit-section">
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="createbank__btn createbank__btn--secondary" 
+            (click)="resetForm()">
+            Reset Form
+          </button>
+          <button 
+            type="submit" 
+            class="createbank__btn createbank__btn--primary" 
+            [disabled]="!quizForm.valid || is_loading || quiz_data.questions.length === 0">
+            <span *ngIf="is_loading">Creating...</span>
+            <span *ngIf="!is_loading">Create Quiz Bank</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Status Messages -->
+  <div class="createbank__status">
+    <div class="createbank__status-success" *ngIf="success_message">
+      {{ success_message }}
+    </div>
+    <div class="createbank__status-error" *ngIf="error_message">
+      {{ error_message }}
+    </div>
+  </div>
 </div>
