@@ -11,6 +11,7 @@ import {
   BackendOption,
   ApiError 
 } from '../types/quiz.types';
+import { environment } from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-createbank',
@@ -19,7 +20,7 @@ import {
   styleUrl: './createbank.scss'
 })
 export class Createbank {
-  private readonly API_URL = 'https://quiz-server-39z8.onrender.com/api';
+  private readonly API_URL = environment.API_URL;
 
   quiz_data: QuizData = {
     name: '',
@@ -239,7 +240,6 @@ export class Createbank {
       if (apiError.error) {
         this.error_message = apiError.error;
       } else if (apiError.errors && apiError.errors.length > 0) {
-        // Handle validation errors from backend
         const first_error = apiError.errors[0];
         this.error_message = `${first_error.field}: ${first_error.message}`;
       } else {
