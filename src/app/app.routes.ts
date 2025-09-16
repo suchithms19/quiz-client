@@ -8,7 +8,7 @@ export const routes: Routes = [
     component: Createbank
   },
   {
-    path: 'landing',
+    path: 'dashboard',
     component: Landing
   },
   {

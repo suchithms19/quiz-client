@@ -142,7 +142,8 @@
               <button 
                 type="button" 
                 class="createbank__btn createbank__btn--add-option" 
-                (click)="addOption(questionIndex)">
+                (click)="addOption(questionIndex)"
+                [disabled]="question.options.length >= 4">
                 + Add Option
               </button>
             </div>
