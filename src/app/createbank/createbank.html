@@ -20,7 +20,7 @@
             placeholder="Enter quiz name"
             class="createbank__input">
         </div>
-
+        
         <div class="createbank__form-group">
           <label for="category" class="createbank__form-group-label">Category *</label>
           <select 
@@ -140,10 +140,10 @@
               </div>
 
               <button 
-                type="button" 
+                type="button"
+                *ngIf="question.options.length < 4"
                 class="createbank__btn createbank__btn--add-option" 
-                (click)="addOption(questionIndex)"
-                [disabled]="question.options.length >= 4">
+                (click)="addOption(questionIndex)">
                 + Add Option
               </button>
             </div>
@@ -165,8 +165,7 @@
           </button>
           <button 
             type="submit" 
-            class="createbank__btn createbank__btn--primary" 
-            [disabled]="!quizForm.valid || is_loading || quiz_data.questions.length === 0">
+            class="createbank__btn createbank__btn--primary">
             <span *ngIf="is_loading">Creating...</span>
             <span *ngIf="!is_loading">Create Quiz Bank</span>
           </button>
