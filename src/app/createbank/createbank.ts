@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { 
   QuizData, 
   QuizOption, 
   QuizQuestion, 
   BackendQuizData, 
   BackendQuestion, 
-  BackendOption,
-  ApiError 
+  BackendOption 
 } from '../types/quiz.types';
-import { environment } from '../../environments/environment.prod';
+import { QuizService } from '../services/quiz.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-createbank',
@@ -20,8 +19,6 @@ import { environment } from '../../environments/environment.prod';
   styleUrl: './createbank.scss'
 })
 export class Createbank {
-  private readonly API_URL = environment.API_URL;
-
   quiz_data: QuizData = {
     name: '',
     category: '',
@@ -34,7 +31,7 @@ export class Createbank {
   success_message: string = '';
   error_message: string = '';
 
-  constructor(private http: HttpClient) {
+  constructor(private quiz_service: QuizService) {
     this.addQuestion();
   }
 
@@ -196,6 +193,7 @@ export class Createbank {
 
   /**
    * Submits the form to create the quiz bank
+   * Uses the QuizService to handle the API call
    */
   async onSubmit(): Promise<void> {
     if (!this.validateForm()) {
@@ -221,10 +219,8 @@ export class Createbank {
         }))
       };
 
-      await this.http.post(
-        `${this.API_URL}/createQbanks`, 
-        backend_data
-      ).toPromise();
+      await firstValueFrom(this.quiz_service.create_quiz_bank(backend_data));
+      
       this.success_message = 'Quiz bank created successfully!';
       
       setTimeout(() => {
@@ -234,17 +230,7 @@ export class Createbank {
 
     } catch (error: any) {
       console.error('Error creating quiz bank:', error);
-      
-      const apiError: ApiError = error.error || {};
-      
-      if (apiError.error) {
-        this.error_message = apiError.error;
-      } else if (apiError.errors && apiError.errors.length > 0) {
-        const first_error = apiError.errors[0];
-        this.error_message = `${first_error.field}: ${first_error.message}`;
-      } else {
-        this.error_message = 'Failed to create quiz bank. Please try again.';
-      }
+      this.error_message = error.message || 'Failed to create quiz bank. Please try again.';
     } finally {
       this.is_loading = false;
     }
