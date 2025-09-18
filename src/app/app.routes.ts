@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { Createbank } from './createbank/createbank';
-import { Landing } from './landing/landing';
+import { Createbank } from './components/createbank/createbank';
+import { Landing } from './components/landing/landing';
 
 export const routes: Routes = [
   {

@@ -8,8 +8,8 @@ import {
   BackendQuizData, 
   BackendQuestion, 
   BackendOption 
-} from '../types/quiz.types';
-import { QuizService } from '../services/quiz.service';
+} from '../../types/quiz.model';
+import { QuizService } from '../../services/quiz.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({

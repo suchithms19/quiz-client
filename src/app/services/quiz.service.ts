@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { BackendQuizData, QuizResponse, ApiError } from '../types/quiz.types';
+import { environment } from '../../environments/environment.prod';
+import { BackendQuizData, QuizResponse, ApiError } from '../types/quiz.model';
 
 
 @Injectable({
