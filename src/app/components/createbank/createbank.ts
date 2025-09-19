@@ -19,20 +19,20 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './createbank.scss'
 })
 export class Createbank {
-  quiz_data: QuizData = {
+  quizData: QuizData = {
     name: '',
     category: '',
-    no_of_questions: 0,
+    noOfQuestions: 0,
     status: true,
     questions: []
   };
 
-  is_loading: boolean = false;
-  success_message: string = '';
-  error_message: string = '';
-  private success_timeout?: number;
+  isLoading: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+  private successTimeout?: number;
 
-  constructor(private quiz_service: QuizService) {
+  constructor(private quizService: QuizService) {
     this.addQuestion();
   }
 
@@ -41,58 +41,58 @@ export class Createbank {
    * Each question starts with 2 empty options
    */
   addQuestion(): void {
-    const new_question: QuizQuestion = {
+    const newQuestion: QuizQuestion = {
       description: '',
       options: [
-        { text: '', is_correct: true },  
-        { text: '', is_correct: false }  
+        { text: '', isCorrect: true },  
+        { text: '', isCorrect: false }  
       ]
     };
 
-    this.quiz_data.questions.push(new_question);
+    this.quizData.questions.push(newQuestion);
     this.updateQuestionCount();
   }
 
   /**
    * Removes a question from the quiz
-   * @param question_index - The index of the question to remove
+   * @param questionIndex - The index of the question to remove
    */
-  removeQuestion(question_index: number): void {
-    if (this.quiz_data.questions.length > 1) {
-      this.quiz_data.questions.splice(question_index, 1);
+  removeQuestion(questionIndex: number): void {
+    if (this.quizData.questions.length > 1) {
+      this.quizData.questions.splice(questionIndex, 1);
       this.updateQuestionCount();
     }
   }
 
   /**
    * Adds a new option to a specific question
-   * @param question_index - The index of the question
+   * @param questionIndex - The index of the question
    */
-  addOption(question_index: number): void {
-    const question = this.quiz_data.questions[question_index];
+  addOption(questionIndex: number): void {
+    const question = this.quizData.questions[questionIndex];
     if (question) {
-      const new_option: QuizOption = {
+      const newOption: QuizOption = {
         text: '',
-        is_correct: false
+        isCorrect: false
       };
-      question.options.push(new_option);
+      question.options.push(newOption);
     }
   }
 
   /**
    * Removes an option from a specific question
-   * @param question_index - The index of the question
-   * @param option_index - The index of the option to remove
+   * @param questionIndex - The index of the question
+   * @param optionIndex - The index of the option to remove
    */
-  removeOption(question_index: number, option_index: number): void {
-    const question = this.quiz_data.questions[question_index];
+  removeOption(questionIndex: number, optionIndex: number): void {
+    const question = this.quizData.questions[questionIndex];
     if (question && question.options.length > 2) {
-      const is_removing_correct = question.options[option_index].is_correct;
+      const isRemovingCorrect = question.options[optionIndex].isCorrect;
       
-      question.options.splice(option_index, 1);
+      question.options.splice(optionIndex, 1);
       
-      if (is_removing_correct && question.options.length > 0) {
-        question.options[0].is_correct = true;
+      if (isRemovingCorrect && question.options.length > 0) {
+        question.options[0].isCorrect = true;
       }
     }
   }
@@ -100,17 +100,17 @@ export class Createbank {
   /**
    * Sets which option is the correct answer for a question
    * Only one option can be correct per question
-   * @param question_index - The index of the question
-   * @param option_index - The index of the option to mark as correct
+   * @param questionIndex - The index of the question
+   * @param optionIndex - The index of the option to mark as correct
    */
-  setCorrectOption(question_index: number, option_index: number): void {
-    const question = this.quiz_data.questions[question_index];
+  setCorrectOption(questionIndex: number, optionIndex: number): void {
+    const question = this.quizData.questions[questionIndex];
     if (question) {
       question.options.forEach(option => {
-        option.is_correct = false;
+        option.isCorrect = false;
       });
       
-      question.options[option_index].is_correct = true;
+      question.options[optionIndex].isCorrect = true;
     }
   }
 
@@ -119,17 +119,17 @@ export class Createbank {
    * This is needed for backend validation
    */
   private updateQuestionCount(): void {
-    this.quiz_data.no_of_questions = this.quiz_data.questions.length;
+    this.quizData.noOfQuestions = this.quizData.questions.length;
   }
 
   /**
    * Resets the entire form to its initial state
    */
   resetForm(): void {
-    this.quiz_data = {
+    this.quizData = {
       name: '',
       category: '',
-      no_of_questions: 0,
+      noOfQuestions: 0,
       status: true,
       questions: []
     };
@@ -142,13 +142,13 @@ export class Createbank {
    * Clears all status messages and timeouts
    */
   private clearMessages(): void {
-    this.success_message = '';
-    this.error_message = '';
+    this.successMessage = '';
+    this.errorMessage = '';
     
     // Clear any existing timeout to prevent race conditions
-    if (this.success_timeout) {
-      clearTimeout(this.success_timeout);
-      this.success_timeout = undefined;
+    if (this.successTimeout) {
+      clearTimeout(this.successTimeout);
+      this.successTimeout = undefined;
     }
   }
 
@@ -159,44 +159,44 @@ export class Createbank {
   private validateForm(): boolean {
     this.clearMessages();
 
-    if (!this.quiz_data.name.trim()) {
-      this.error_message = 'Please enter a quiz name';
+    if (!this.quizData.name.trim()) {
+      this.errorMessage = 'Please enter a quiz name';
       return false;
     }
 
-    if (!this.quiz_data.category) {
-      this.error_message = 'Please select a category';
+    if (!this.quizData.category) {
+      this.errorMessage = 'Please select a category';
       return false;
     }
 
-    if (this.quiz_data.questions.length === 0) {
-      this.error_message = 'Please add at least one question';
+    if (this.quizData.questions.length === 0) {
+      this.errorMessage = 'Please add at least one question';
       return false;
     }
 
-    for (let i = 0; i < this.quiz_data.questions.length; i++) {
-      const question = this.quiz_data.questions[i];
+    for (let i = 0; i < this.quizData.questions.length; i++) {
+      const question = this.quizData.questions[i];
       
       if (!question.description.trim()) {
-        this.error_message = `Question ${i + 1} needs a description`;
+        this.errorMessage = `Question ${i + 1} needs a description`;
         return false;
       }
 
       if (question.options.length < 2) {
-        this.error_message = `Question ${i + 1} needs at least 2 options`;
+        this.errorMessage = `Question ${i + 1} needs at least 2 options`;
         return false;
       }
 
       for (let j = 0; j < question.options.length; j++) {
         if (!question.options[j].text.trim()) {
-          this.error_message = `Question ${i + 1}, Option ${j + 1} needs text`;
+          this.errorMessage = `Question ${i + 1}, Option ${j + 1} needs text`;
           return false;
         }
       }
 
-      const has_correct_answer = question.options.some(option => option.is_correct);
-      if (!has_correct_answer) {
-        this.error_message = `Question ${i + 1} needs a correct answer`;
+      const hasCorrectAnswer = question.options.some(option => option.isCorrect);
+      if (!hasCorrectAnswer) {
+        this.errorMessage = `Question ${i + 1} needs a correct answer`;
         return false;
       }
     }
@@ -213,37 +213,37 @@ export class Createbank {
       return;
     }
 
-    this.is_loading = true;
+    this.isLoading = true;
 
     try {
-      const backend_data: BackendQuizData = {
-        name: this.quiz_data.name.trim(),
-        category: this.quiz_data.category,
-        noOfQuestions: this.quiz_data.no_of_questions,
-        status: this.quiz_data.status,
-        questions: this.quiz_data.questions.map((question: QuizQuestion): BackendQuestion => ({
+      const backendData: BackendQuizData = {
+        name: this.quizData.name.trim(),
+        category: this.quizData.category,
+        noOfQuestions: this.quizData.noOfQuestions,
+        status: this.quizData.status,
+        questions: this.quizData.questions.map((question: QuizQuestion): BackendQuestion => ({
           description: question.description.trim(),
           options: question.options.map((option: QuizOption): BackendOption => ({
             text: option.text.trim(),
-            isCorrect: option.is_correct 
+            isCorrect: option.isCorrect 
           }))
         }))
       };
 
-      await firstValueFrom(this.quiz_service.create_quiz_bank(backend_data));
+      await firstValueFrom(this.quizService.createQuizBank(backendData));
       
       this.clearMessages();
-      this.success_message = 'Quiz bank created successfully!';
+      this.successMessage = 'Quiz bank created successfully!';
       
-      this.success_timeout = setTimeout(() => {
+      this.successTimeout = setTimeout(() => {
         this.resetForm();
       }, 3000);
 
     } catch (error: any) {
       console.error('Error creating quiz bank:', error);
-      this.error_message = error.message || 'Failed to create quiz bank. Please try again.';
+      this.errorMessage = error.message || 'Failed to create quiz bank. Please try again.';
     } finally {
-      this.is_loading = false;
+      this.isLoading = false;
     }
   }
 }

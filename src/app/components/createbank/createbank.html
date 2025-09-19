@@ -15,7 +15,7 @@
             type="text" 
             id="quiz_name" 
             name="quiz_name"
-            [(ngModel)]="quiz_data.name" 
+            [(ngModel)]="quizData.name" 
             required
             placeholder="Enter quiz name"
             class="createbank__input">
@@ -26,7 +26,7 @@
           <select 
             id="category" 
             name="category"
-            [(ngModel)]="quiz_data.category" 
+            [(ngModel)]="quizData.category" 
             required
             class="createbank__input">
             <option value="">Select a category</option>
@@ -48,7 +48,7 @@
                 type="radio" 
                 name="status" 
                 [value]="true" 
-                [(ngModel)]="quiz_data.status" 
+                [(ngModel)]="quizData.status" 
                 required>
               <span class="radio-custom"></span>
               Active
@@ -58,7 +58,7 @@
                 type="radio" 
                 name="status" 
                 [value]="false" 
-                [(ngModel)]="quiz_data.status" 
+                [(ngModel)]="quizData.status" 
                 required>
               <span class="radio-custom"></span>
               Inactive
@@ -69,16 +69,16 @@
 
       <div class="createbank__section">
         <div class="createbank__section-header">
-          <h2>Questions ({{ quiz_data.questions.length }})</h2>
+          <h2>Questions ({{ quizData.questions.length }})</h2>
           <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
             + Add Question
           </button>
         </div>
 
-        <div class="createbank__questions-list" *ngIf="quiz_data.questions.length > 0">
+        <div class="createbank__questions-list" *ngIf="quizData.questions.length > 0">
           <div 
             class="createbank__questions-item" 
-            *ngFor="let question of quiz_data.questions; let questionIndex = index">
+            *ngFor="let question of quizData.questions; let questionIndex = index">
             
             <div class="createbank__questions-header">
               <h3>Question {{ questionIndex + 1 }}</h3>
@@ -86,7 +86,7 @@
                 type="button" 
                 class="createbank__btn createbank__btn--remove" 
                 (click)="removeQuestion(questionIndex)"
-                [disabled]="quiz_data.questions.length <= 1">
+                [disabled]="quizData.questions.length <= 1">
                 Remove
               </button>
             </div>
@@ -115,7 +115,7 @@
                     <input 
                       type="radio" 
                       [name]="'correct_' + questionIndex" 
-                      [checked]="option.is_correct"
+                      [checked]="option.isCorrect"
                       (change)="setCorrectOption(questionIndex, optionIndex)">
                     <span class="radio-custom"></span>
                     Correct
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <div class="empty-state" *ngIf="quiz_data.questions.length === 0">
+        <div class="empty-state" *ngIf="quizData.questions.length === 0">
           <p>No questions added yet. Click "Add Question" to get started!</p>
         </div>
       </div>
@@ -158,11 +158,11 @@
       <div class="createbank__section submit-section">
         <!-- Status Messages -->
         <div class="createbank__status">
-          <div class="createbank__status-success" *ngIf="success_message">
-            {{ success_message }}
+          <div class="createbank__status-success" *ngIf="successMessage">
+            {{ successMessage }}
           </div>
-          <div class="createbank__status-error" *ngIf="error_message">
-            {{ error_message }}
+          <div class="createbank__status-error" *ngIf="errorMessage">
+            {{ errorMessage }}
           </div>
         </div>
         
@@ -176,8 +176,8 @@
           <button 
             type="submit" 
             class="createbank__btn createbank__btn--primary">
-            <span *ngIf="is_loading">Creating...</span>
-            <span *ngIf="!is_loading">Create Quiz Bank</span>
+            <span *ngIf="isLoading">Creating...</span>
+            <span *ngIf="!isLoading">Create Quiz Bank</span>
           </button>
         </div>
       </div>

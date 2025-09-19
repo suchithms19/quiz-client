@@ -1,6 +1,6 @@
 export interface QuizOption {
   text: string;
-  is_correct: boolean;
+  isCorrect: boolean;
 }
 
 export interface QuizQuestion {
@@ -11,7 +11,7 @@ export interface QuizQuestion {
 export interface QuizData {
   name: string;
   category: string;
-  no_of_questions: number;
+  noOfQuestions: number;
   status: boolean;
   questions: QuizQuestion[];
 }

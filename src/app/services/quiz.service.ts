@@ -11,38 +11,38 @@ import { BackendQuizData, QuizResponse, ApiError } from '../types/quiz.model';
 })
 
 export class QuizService {
-    private readonly api_url = environment.API_URL;
+    private readonly apiUrl = environment.API_URL;
 
     constructor(private http: HttpClient) { }
 
-    create_quiz_bank(quiz_data: BackendQuizData): Observable<QuizResponse> {
+    createQuizBank(quizData: BackendQuizData): Observable<QuizResponse> {
         return this.http.post<QuizResponse>(
-            `${this.api_url}/createQbanks`,
-            quiz_data
+            `${this.apiUrl}/createQbanks`,
+            quizData
         ).pipe(
-            catchError(this.handle_error)
+            catchError(this.handleError)
         );
     }
 
-    private handle_error = (error: HttpErrorResponse): Observable<never> => {
+    private handleError = (error: HttpErrorResponse): Observable<never> => {
         console.error('Quiz Service Error:', error);
 
-        const api_error: ApiError = error.error || {};
-        let error_message = 'An unexpected error occurred. Please try again.';
+        const apiError: ApiError = error.error || {};
+        let errorMessage = 'An unexpected error occurred. Please try again.';
 
-        if (api_error.error) {
-            error_message = api_error.error;
-        } else if (api_error.errors && api_error.errors.length > 0) {
-            const first_error = api_error.errors[0];
-            error_message = `${first_error.field}: ${first_error.message}`;
+        if (apiError.error) {
+            errorMessage = apiError.error;
+        } else if (apiError.errors && apiError.errors.length > 0) {
+            const firstError = apiError.errors[0];
+            errorMessage = `${firstError.field}: ${firstError.message}`;
         } else if (error.status === 0) {
-            error_message = 'Unable to connect to server. Please check your internet connection.';
+            errorMessage = 'Unable to connect to server. Please check your internet connection.';
         } else if (error.status >= 500) {
-            error_message = 'Server error occurred. Please try again later.';
+            errorMessage = 'Server error occurred. Please try again later.';
         } else if (error.status === 404) {
-            error_message = 'The requested resource was not found.';
+            errorMessage = 'The requested resource was not found.';
         }
 
-        return throwError(() => new Error(error_message));
+        return throwError(() => new Error(errorMessage));
     };
 }
