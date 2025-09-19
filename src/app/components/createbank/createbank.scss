@@ -282,27 +282,41 @@
 
   // Status Messages
   &__status {
-    max-width: 900px;
-    margin: 20px auto 0;
+    min-height: 40px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 
     &-success {
       background-color: #d1fae5;
       color: #065f46;
-      padding: 16px 20px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #a7f3d0;
-      margin-bottom: 12px;
       font-weight: 500;
+      animation: slideIn 0.3s ease-out;
     }
 
     &-error {
       background-color: #fee2e2;
       color: #991b1b;
-      padding: 16px 20px;
+      padding:8px 10px;
       border-radius: 8px;
       border: 1px solid #fecaca;
-      margin-bottom: 12px;
       font-weight: 500;
+      animation: slideIn 0.3s ease-out;
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 

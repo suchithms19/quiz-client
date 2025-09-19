@@ -10,7 +10,7 @@
         <h2 class="createbank__section-title">Quiz Information</h2>
         
         <div class="createbank__form-group">
-          <label for="quiz_name" class="createbank__form-group-label">Quiz Name *</label>
+          <label for="quiz_name" class="createbank__form-group-label">Quiz Name <span style="color: red;">*</span> </label>
           <input 
             type="text" 
             id="quiz_name" 
@@ -22,7 +22,7 @@
         </div>
         
         <div class="createbank__form-group">
-          <label for="category" class="createbank__form-group-label">Category *</label>
+          <label for="category" class="createbank__form-group-label">Category <span style="color: red;">*</span> </label>
           <select 
             id="category" 
             name="category"
@@ -41,7 +41,7 @@
         </div>
 
         <div class="createbank__form-group">
-          <label for="status" class="createbank__form-group-label">Status *</label>
+          <label for="status" class="createbank__form-group-label">Status <span style="color: red;">*</span></label>
           <div class="radio-group">
             <label class="radio-label">
               <input 
@@ -92,7 +92,7 @@
             </div>
 
             <div class="createbank__form-group">
-              <label [for]="'question_' + questionIndex" class="createbank__form-group-label">Question Text *</label>
+              <label [for]="'question_' + questionIndex" class="createbank__form-group-label">Question Text <span style="color: red;">*</span></label>
               <textarea 
                 [id]="'question_' + questionIndex"
                 [name]="'question_' + questionIndex"
@@ -156,6 +156,16 @@
       </div>
 
       <div class="createbank__section submit-section">
+        <!-- Status Messages -->
+        <div class="createbank__status">
+          <div class="createbank__status-success" *ngIf="success_message">
+            {{ success_message }}
+          </div>
+          <div class="createbank__status-error" *ngIf="error_message">
+            {{ error_message }}
+          </div>
+        </div>
+        
         <div class="form-actions">
           <button 
             type="button" 
@@ -172,15 +182,5 @@
         </div>
       </div>
     </form>
-  </div>
-
-  <!-- Status Messages -->
-  <div class="createbank__status">
-    <div class="createbank__status-success" *ngIf="success_message">
-      {{ success_message }}
-    </div>
-    <div class="createbank__status-error" *ngIf="error_message">
-      {{ error_message }}
-    </div>
   </div>
 </div>
