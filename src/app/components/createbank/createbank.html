@@ -161,7 +161,10 @@
           <div class="createbank__status-success" *ngIf="successMessage">
             {{ successMessage }}
           </div>
-          <div class="createbank__status-error" *ngIf="errorMessage">
+          <div class="createbank__status-error" *ngIf="validationError">
+            {{ validationError }}
+          </div>
+          <div class="createbank__status-error" *ngIf="errorMessage$ | async as errorMessage">
             {{ errorMessage }}
           </div>
         </div>
@@ -176,8 +179,8 @@
           <button 
             type="submit" 
             class="createbank__btn createbank__btn--primary">
-            <span *ngIf="isLoading">Creating...</span>
-            <span *ngIf="!isLoading">Create Quiz Bank</span>
+            <span *ngIf="isLoading$ | async">Creating...</span>
+            <span *ngIf="!(isLoading$ | async)">Create Quiz Bank</span>
           </button>
         </div>
       </div>

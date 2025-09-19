@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { 
   QuizData, 
   QuizOption, 
@@ -9,8 +12,7 @@ import {
   BackendQuestion, 
   BackendOption 
 } from '../../types/quiz.model';
-import { QuizService } from '../../services/quiz.service';
-import { firstValueFrom } from 'rxjs';
+import { createQuizBank, clearError, selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store';
 
 @Component({
   selector: 'app-createbank',
@@ -18,7 +20,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './createbank.html',
   styleUrl: './createbank.scss'
 })
-export class Createbank {
+export class Createbank implements OnInit, OnDestroy {
   quizData: QuizData = {
     name: '',
     category: '',
@@ -27,13 +29,41 @@ export class Createbank {
     questions: []
   };
 
-  isLoading: boolean = false;
+  isLoading$: Observable<boolean>;
+  errorMessage$: Observable<string | null>;
+  isSuccess$: Observable<boolean>;
+  
   successMessage: string = '';
-  errorMessage: string = '';
+  validationError: string = '';
   private successTimeout?: number;
+  private destroy$ = new Subject<void>();
 
-  constructor(private quizService: QuizService) {
+  constructor(private store: Store) {
+    this.isLoading$ = this.store.select(selectIsLoading);
+    this.errorMessage$ = this.store.select(selectErrorMessage);
+    this.isSuccess$ = this.store.select(selectIsSuccess);
     this.addQuestion();
+  }
+
+  ngOnInit(): void {
+    this.isSuccess$.pipe(takeUntil(this.destroy$)).subscribe(isSuccess => {
+      if (isSuccess) {
+        this.successMessage = 'Quiz bank created successfully!';
+        this.successTimeout = setTimeout(() => {
+          this.resetForm();
+          this.successMessage = '';
+        }, 3000);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    
+    if (this.successTimeout) {
+      clearTimeout(this.successTimeout);
+    }
   }
 
   /**
@@ -143,7 +173,8 @@ export class Createbank {
    */
   private clearMessages(): void {
     this.successMessage = '';
-    this.errorMessage = '';
+    this.validationError = '';
+    this.store.dispatch(clearError());
     
     // Clear any existing timeout to prevent race conditions
     if (this.successTimeout) {
@@ -154,96 +185,76 @@ export class Createbank {
 
   /**
    * Validates the form before submission
-   * @returns true if form is valid, false otherwise
+   * @returns validation error message or null if valid
    */
-  private validateForm(): boolean {
+  private validateForm(): string | null {
     this.clearMessages();
 
     if (!this.quizData.name.trim()) {
-      this.errorMessage = 'Please enter a quiz name';
-      return false;
+      return 'Please enter a quiz name';
     }
 
     if (!this.quizData.category) {
-      this.errorMessage = 'Please select a category';
-      return false;
+      return 'Please select a category';
     }
 
     if (this.quizData.questions.length === 0) {
-      this.errorMessage = 'Please add at least one question';
-      return false;
+      return 'Please add at least one question';
     }
 
     for (let i = 0; i < this.quizData.questions.length; i++) {
       const question = this.quizData.questions[i];
       
       if (!question.description.trim()) {
-        this.errorMessage = `Question ${i + 1} needs a description`;
-        return false;
+        return `Question ${i + 1} needs a description`;
       }
 
       if (question.options.length < 2) {
-        this.errorMessage = `Question ${i + 1} needs at least 2 options`;
-        return false;
+        return `Question ${i + 1} needs at least 2 options`;
       }
 
       for (let j = 0; j < question.options.length; j++) {
         if (!question.options[j].text.trim()) {
-          this.errorMessage = `Question ${i + 1}, Option ${j + 1} needs text`;
-          return false;
+          return `Question ${i + 1}, Option ${j + 1} needs text`;
         }
       }
 
       const hasCorrectAnswer = question.options.some(option => option.isCorrect);
       if (!hasCorrectAnswer) {
-        this.errorMessage = `Question ${i + 1} needs a correct answer`;
-        return false;
+        return `Question ${i + 1} needs a correct answer`;
       }
     }
 
-    return true;
+    return null;
   }
 
   /**
    * Submits the form to create the quiz bank
-   * Uses the QuizService to handle the API call
+   * Uses NgRx store to dispatch the action
    */
-  async onSubmit(): Promise<void> {
-    if (!this.validateForm()) {
+  onSubmit(): void {
+    
+    const validationError = this.validateForm();
+    if (validationError) {
+      this.successMessage = '';
+      this.validationError = validationError;
       return;
     }
 
-    this.isLoading = true;
-
-    try {
-      const backendData: BackendQuizData = {
-        name: this.quizData.name.trim(),
-        category: this.quizData.category,
-        noOfQuestions: this.quizData.noOfQuestions,
-        status: this.quizData.status,
-        questions: this.quizData.questions.map((question: QuizQuestion): BackendQuestion => ({
-          description: question.description.trim(),
-          options: question.options.map((option: QuizOption): BackendOption => ({
-            text: option.text.trim(),
-            isCorrect: option.isCorrect 
-          }))
+    const backendData: BackendQuizData = {
+      name: this.quizData.name.trim(),
+      category: this.quizData.category,
+      noOfQuestions: this.quizData.noOfQuestions,
+      status: this.quizData.status,
+      questions: this.quizData.questions.map((question: QuizQuestion): BackendQuestion => ({
+        description: question.description.trim(),
+        options: question.options.map((option: QuizOption): BackendOption => ({
+          text: option.text.trim(),
+          isCorrect: option.isCorrect 
         }))
-      };
+      }))
+    };
 
-      await firstValueFrom(this.quizService.createQuizBank(backendData));
-      
-      this.clearMessages();
-      this.successMessage = 'Quiz bank created successfully!';
-      
-      this.successTimeout = setTimeout(() => {
-        this.resetForm();
-      }, 3000);
-
-    } catch (error: any) {
-      console.error('Error creating quiz bank:', error);
-      this.errorMessage = error.message || 'Failed to create quiz bank. Please try again.';
-    } finally {
-      this.isLoading = false;
-    }
+    this.store.dispatch(createQuizBank({ quizData: backendData }));
   }
 }
