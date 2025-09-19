@@ -30,6 +30,7 @@ export class Createbank {
   is_loading: boolean = false;
   success_message: string = '';
   error_message: string = '';
+  private success_timeout?: number;
 
   constructor(private quiz_service: QuizService) {
     this.addQuestion();
@@ -133,10 +134,22 @@ export class Createbank {
       questions: []
     };
     
+    this.clearMessages();
+    this.addQuestion();
+  }
+
+  /**
+   * Clears all status messages and timeouts
+   */
+  private clearMessages(): void {
     this.success_message = '';
     this.error_message = '';
     
-    this.addQuestion();
+    // Clear any existing timeout to prevent race conditions
+    if (this.success_timeout) {
+      clearTimeout(this.success_timeout);
+      this.success_timeout = undefined;
+    }
   }
 
   /**
@@ -144,7 +157,7 @@ export class Createbank {
    * @returns true if form is valid, false otherwise
    */
   private validateForm(): boolean {
-    this.error_message = '';
+    this.clearMessages();
 
     if (!this.quiz_data.name.trim()) {
       this.error_message = 'Please enter a quiz name';
@@ -201,8 +214,6 @@ export class Createbank {
     }
 
     this.is_loading = true;
-    this.error_message = '';
-    this.success_message = '';
 
     try {
       const backend_data: BackendQuizData = {
@@ -221,11 +232,11 @@ export class Createbank {
 
       await firstValueFrom(this.quiz_service.create_quiz_bank(backend_data));
       
+      this.clearMessages();
       this.success_message = 'Quiz bank created successfully!';
       
-      setTimeout(() => {
+      this.success_timeout = setTimeout(() => {
         this.resetForm();
-        this.success_message = '';
       }, 3000);
 
     } catch (error: any) {
