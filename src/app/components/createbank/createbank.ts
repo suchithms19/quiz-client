@@ -188,7 +188,8 @@ export class Createbank implements OnInit, OnDestroy {
    * @returns validation error message or null if valid
    */
   private validateForm(): string | null {
-    this.clearMessages();
+    
+    this.clearMessages(); //@todo: improve this
 
     if (!this.quizData.name.trim()) {
       return 'Please enter a quiz name';
