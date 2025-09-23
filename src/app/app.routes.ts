@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { Createbank } from './components/createbank/createbank';
-import { Landing } from './components/landing/landing';
+import { Createbank, Landing } from 'quiz-components';
 
 export const routes: Routes = [
   {
