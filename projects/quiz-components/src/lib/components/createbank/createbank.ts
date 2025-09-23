@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { 
@@ -11,8 +10,8 @@ import {
   BackendQuizData, 
   BackendQuestion, 
   BackendOption 
-} from '../../lib/types/quiz.model';
-import { createQuizBank, clearError, selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../../../../src/app/store';
+} from '../../types/quiz.model';
+import { QuizStoreInterface } from '../../services/quiz-store.interface';
 
 @Component({
   selector: 'qc-createbank',
@@ -38,10 +37,10 @@ export class Createbank implements OnInit, OnDestroy {
   private successTimeout?: number;
   private destroy$ = new Subject<void>();
 
-  constructor(private store: Store) {
-    this.isLoading$ = this.store.select(selectIsLoading);
-    this.errorMessage$ = this.store.select(selectErrorMessage);
-    this.isSuccess$ = this.store.select(selectIsSuccess);
+  constructor(private quizStore: QuizStoreInterface) {
+    this.isLoading$ = this.quizStore.isLoading$;
+    this.errorMessage$ = this.quizStore.errorMessage$;
+    this.isSuccess$ = this.quizStore.isSuccess$;
     this.addQuestion();
   }
 
@@ -174,7 +173,7 @@ export class Createbank implements OnInit, OnDestroy {
   private clearMessages(): void {
     this.successMessage = '';
     this.validationError = '';
-    this.store.dispatch(clearError());
+     this.quizStore.clearError();
     
     // Clear any existing timeout to prevent race conditions
     if (this.successTimeout) {
@@ -256,6 +255,6 @@ export class Createbank implements OnInit, OnDestroy {
       }))
     };
 
-    this.store.dispatch(createQuizBank({ quizData: backendData }));
+     this.quizStore.createQuizBank(backendData);
   }
 }
