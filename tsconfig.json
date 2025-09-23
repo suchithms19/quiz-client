@@ -11,6 +11,11 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
+    "paths": {
+      "quiz-components": [
+        "./dist/quiz-components"
+      ]
+    },
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve"
@@ -29,6 +34,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/quiz-components/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/quiz-components/tsconfig.spec.json"
     }
   ]
 }

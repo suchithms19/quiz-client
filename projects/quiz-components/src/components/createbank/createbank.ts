@@ -11,11 +11,11 @@ import {
   BackendQuizData, 
   BackendQuestion, 
   BackendOption 
-} from '../../types/quiz.model';
-import { createQuizBank, clearError, selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store';
+} from '../../lib/types/quiz.model';
+import { createQuizBank, clearError, selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../../../../src/app/store';
 
 @Component({
-  selector: 'app-createbank',
+  selector: 'qc-createbank',
   imports: [FormsModule, CommonModule],
   templateUrl: './createbank.html',
   styleUrl: './createbank.scss'

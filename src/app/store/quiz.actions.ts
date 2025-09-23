@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { BackendQuizData, QuizResponse } from '../types/quiz.model';
+import { BackendQuizData, QuizResponse } from '../../../projects/quiz-components/src/lib/types/quiz.model';
 
 export const createQuizBank = createAction(
   '[Quiz] Create Quiz Bank',

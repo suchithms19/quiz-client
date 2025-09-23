@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-header',
+  selector: 'qc-navbar',
   imports: [RouterModule],
-  templateUrl: './header.html',
-  styleUrl: './header.scss'
+  templateUrl: './navbar.html',
+  styleUrl: './navbar.scss'
 })
-export class Header {
-
+export class Navbar {
 }
