@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 # Environment files
-src/environments
+projects/quiz-components/src/lib/environments

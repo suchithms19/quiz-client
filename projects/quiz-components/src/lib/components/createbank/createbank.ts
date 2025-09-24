@@ -11,7 +11,10 @@ import {
   BackendQuestion, 
   BackendOption 
 } from '../../types/quiz.model';
-import { QuizStoreInterface } from '../../services/quiz-store.interface';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { createQuizBank, clearError } from '../../store/quiz.actions';
+import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store/quiz.selectors';
 
 @Component({
   selector: 'qc-createbank',
@@ -37,10 +40,10 @@ export class Createbank implements OnInit, OnDestroy {
   private successTimeout?: number;
   private destroy$ = new Subject<void>();
 
-  constructor(private quizStore: QuizStoreInterface) {
-    this.isLoading$ = this.quizStore.isLoading$;
-    this.errorMessage$ = this.quizStore.errorMessage$;
-    this.isSuccess$ = this.quizStore.isSuccess$;
+  constructor(private store: Store<AppState>) {
+    this.isLoading$ = this.store.select(selectIsLoading);
+    this.errorMessage$ = this.store.select(selectErrorMessage);
+    this.isSuccess$ = this.store.select(selectIsSuccess);
     this.addQuestion();
   }
 
@@ -173,7 +176,7 @@ export class Createbank implements OnInit, OnDestroy {
   private clearMessages(): void {
     this.successMessage = '';
     this.validationError = '';
-     this.quizStore.clearError();
+    this.store.dispatch(clearError());
     
     // Clear any existing timeout to prevent race conditions
     if (this.successTimeout) {
@@ -255,6 +258,6 @@ export class Createbank implements OnInit, OnDestroy {
       }))
     };
 
-     this.quizStore.createQuizBank(backendData);
+    this.store.dispatch(createQuizBank({ quizData: backendData }));
   }
 }

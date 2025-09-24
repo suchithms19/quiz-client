@@ -1,4 +1,4 @@
-import { QuizResponse } from 'quiz-components';
+import { QuizResponse } from '../types/quiz.model';
 
 export interface QuizState {
   quizzes: QuizResponse[];

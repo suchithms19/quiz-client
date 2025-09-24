@@ -3,7 +3,8 @@ export * from './lib/components/header/header';
 export * from './lib/components/landing/landing';
 export * from './lib/components/navbar/navbar';
 export * from './lib/types/quiz.model';
-export * from './lib/services/quiz-store.interface';
+export * from './lib/services/quiz.service';
+export * from './lib/store';
 
 import { Createbank } from './lib/components/createbank/createbank';
 import { Header } from './lib/components/header/header';

@@ -3,3 +3,7 @@ export * from './quiz.actions';
 export * from './quiz.reducer';
 export * from './quiz.effects';
 export * from './quiz.selectors';
+
+export interface AppState {
+  quiz: import('./quiz.state').QuizState;
+}

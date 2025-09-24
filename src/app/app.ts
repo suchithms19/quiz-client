@@ -1,15 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header, Navbar, QuizStoreInterface } from 'quiz-components';
-import { QuizStoreService } from './services/quiz-store.service';
+import { Header, Navbar } from 'quiz-components';
 
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Header, Navbar],
-  providers: [
-    { provide: QuizStoreInterface, useClass: QuizStoreService }
-  ],
+  providers: [],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

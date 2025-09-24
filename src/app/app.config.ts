@@ -5,7 +5,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
-import { quizReducer, QuizEffects } from './store';
+import { quizReducer, QuizEffects } from 'quiz-components';
 
 export const appConfig: ApplicationConfig = {
   providers: [
