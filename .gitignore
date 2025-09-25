@@ -41,5 +41,3 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment files
-projects/quiz-components/src/lib/environments

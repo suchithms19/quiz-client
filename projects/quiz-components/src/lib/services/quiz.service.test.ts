@@ -4,13 +4,6 @@ import { it, expect, beforeEach, describe } from '@jest/globals';
 import { jest } from '@jest/globals';
 import { of, throwError } from 'rxjs';
 
-jest.mock('../environments/environment.prod', () => ({
-  environment: {
-    production: true,
-    API_URL: 'http://test-api-url.com/api'
-  }
-}));
-
 describe('QuizService Logic', () => {
   let service: QuizService;
   let mockHttp: any;
