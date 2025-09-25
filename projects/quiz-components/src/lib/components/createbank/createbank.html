@@ -18,7 +18,12 @@
             [(ngModel)]="quizData.name" 
             required
             placeholder="Enter quiz name"
-            class="createbank__input">
+            class="createbank__input"
+            #quizNameInput="ngModel"
+            [class.createbank__input--error]="quizNameInput.invalid && quizNameInput.touched">
+          <div class="createbank__error-message" *ngIf="quizNameInput.invalid && quizNameInput.touched">
+            <span *ngIf="quizNameInput.errors?.['required']">Quiz name is required</span>
+          </div>
         </div>
         
         <div class="createbank__form-group">
@@ -28,7 +33,9 @@
             name="category"
             [(ngModel)]="quizData.category" 
             required
-            class="createbank__input">
+            class="createbank__input"
+            #categoryInput="ngModel"
+            [class.createbank__input--error]="categoryInput.invalid && categoryInput.touched">
             <option value="">Select a category</option>
             <option value="programming">Programming</option>
             <option value="mathematics">Mathematics</option>
@@ -38,6 +45,9 @@
             <option value="general">General Knowledge</option>
             <option value="other">Other</option>
           </select>
+          <div class="createbank__error-message" *ngIf="categoryInput.invalid && categoryInput.touched">
+            <span *ngIf="categoryInput.errors?.['required']">Please select a category</span>
+          </div>
         </div>
 
         <div class="createbank__form-group">
@@ -100,7 +110,12 @@
                 required
                 placeholder="Enter your question here..."
                 class="createbank__textarea"
-                rows="3"></textarea>
+                rows="3"
+                #questionInput="ngModel"
+                [class.createbank__textarea--error]="questionInput.invalid && questionInput.touched"></textarea>
+              <div class="createbank__error-message" *ngIf="questionInput.invalid && questionInput.touched">
+                <span *ngIf="questionInput.errors?.['required']">Question text is required</span>
+              </div>
             </div>
 
             <div class="options-section">
@@ -121,13 +136,20 @@
                     Correct
                   </label>
                   
-                  <input 
-                    type="text"
-                    [(ngModel)]="option.text"
-                    [name]="'option_' + questionIndex + '_' + optionIndex"
-                    required
-                    placeholder="Enter answer option..."
-                    class="createbank__input option-text">
+                  <div class="option-input-wrapper">
+                    <input 
+                      type="text"
+                      [(ngModel)]="option.text"
+                      [name]="'option_' + questionIndex + '_' + optionIndex"
+                      required
+                      placeholder="Enter answer option..."
+                      class="createbank__input option-text"
+                      #optionInput="ngModel"
+                      [class.createbank__input--error]="optionInput.invalid && optionInput.touched">
+                    <div class="createbank__error-message createbank__error-message--option" *ngIf="optionInput.invalid && optionInput.touched">
+                      <span *ngIf="optionInput.errors?.['required']">Option text is required</span>
+                    </div>
+                  </div>
                   
                   <button 
                     type="button" 
