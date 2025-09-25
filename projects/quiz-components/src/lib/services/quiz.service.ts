@@ -25,7 +25,6 @@ export class QuizService {
     }
 
     private handleError = (error: HttpErrorResponse): Observable<never> => {
-        console.error('Quiz Service Error:', error);
 
         const apiError: ApiError = error.error || {};
         let errorMessage = 'An unexpected error occurred. Please try again.';
