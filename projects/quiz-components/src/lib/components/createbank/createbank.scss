@@ -458,6 +458,10 @@
     margin-bottom: 12px;
   }
 
+  .options-container {
+    min-height: 60px;
+  }
+
   .option-input-group {
     display: flex;
     align-items: center;
@@ -466,6 +470,8 @@
     padding: 16px;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
+    position: relative;
+    transition: all 0.2s ease;
 
     .radio-label {
       margin: 0;
@@ -495,6 +501,40 @@
     .option-text {
       width: 100%;
       margin: 0;
+    }
+
+    .drag-handle {
+      cursor: grab;
+      color: #9ca3af;
+      padding: 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      min-height: 32px;
+      border: 1px solid transparent;
+
+      &:hover {
+        background-color: #f3f4f6;
+        color: #240f6e;
+        border-color: #e5e7eb;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        cursor: grabbing;
+        background-color: #240f6e;
+        color: white;
+      }
+
+      .drag-icon {
+        font-size: 18px;
+        font-weight: bold;
+        transform: rotate(90deg);
+        line-height: 1;
+      }
     }
   }
 
@@ -662,4 +702,93 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+// CDK Drag and Drop Styles
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  background: white;
+  border: 2px solid #240f6e;
+  transform: rotate(3deg);
+  
+  .option-input-group {
+    border: none;
+    box-shadow: none;
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    gap: 16px;
+    display: flex;
+    align-items: center;
+    
+    // Hide interactive elements in drag preview
+    .radio-label {
+      display: none;
+    }
+    
+    .option-label {
+      color: #240f6e;
+      font-weight: 700;
+      font-size: 18px;
+      min-width: 30px;
+    }
+    
+    .option-input-wrapper {
+      flex: 1;
+      
+      .option-text {
+        border: 1px solid #240f6e;
+        background: #f0f4ff;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        color: #240f6e;
+        pointer-events: none;
+      }
+      
+      .createbank__error-message {
+        display: none;
+      }
+    }
+    
+    .drag-handle {
+      display: none;
+    }
+    
+    .createbank__btn--remove {
+      display: none;
+    }
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+  background: #f0f4ff;
+  border: 2px dashed #240f6e;
+  border-radius: 8px;
+  min-height: 70px;
+  
+  .option-input-group {
+    opacity: 0;
+  }
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.option-item.cdk-drag-disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.option-item.cdk-drag-disabled .drag-handle {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cdk-drop-list-dragging .option-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

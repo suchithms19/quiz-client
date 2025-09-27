@@ -119,33 +119,46 @@
             </div>
 
             <div class="options-section">
-              <h4>Answer Options</h4>
+              <h4>Options</h4>
               
               <div 
-                class="option-item" 
-                *ngFor="let option of question.options; let optionIndex = index">
+                class="options-container"
+                cdkDropList 
+                (cdkDropListDropped)="onOptionDrop($event, questionIndex)">
                 
-                <div class="option-input-group">
-                  <label class="radio-label">
+                <div 
+                  class="option-item" 
+                  *ngFor="let option of question.options; let optionIndex = index"
+                  cdkDrag>
+                  
+                  <div class="option-input-group">
+                  <label class="radio-label" [attr.for]="'correct_' + questionIndex + '_' + optionIndex" (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
                     <input 
                       type="radio" 
+                      [id]="'correct_' + questionIndex"
                       [name]="'correct_' + questionIndex" 
                       [checked]="option.isCorrect"
-                      (change)="setCorrectOption(questionIndex, optionIndex)">
+                      (change)="setCorrectOption(questionIndex, optionIndex)"
+                      (mousedown)="$event.stopPropagation()"
+                      (click)="$event.stopPropagation()">
                     <span class="radio-custom"></span>
                   </label>
                   <div class="option-label">{{ getOptionLabel(optionIndex).toUpperCase() }}</div>
                   
-                  <div class="option-input-wrapper">
+                  <div class="option-input-wrapper" (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
                     <input 
                       type="text"
+                      [id]="'option_' + questionIndex + '_' + optionIndex"
                       [(ngModel)]="option.text"
                       [name]="'option_' + questionIndex + '_' + optionIndex"
                       required
                       placeholder="Enter answer option..."
                       class="createbank__input option-text"
                       #optionInput="ngModel"
-                      [class.createbank__input--error]="optionInput.invalid && optionInput.touched">
+                      [class.createbank__input--error]="optionInput.invalid && optionInput.touched"
+                      (mousedown)="$event.stopPropagation()"
+                      (click)="$event.stopPropagation()"
+                      cdkDragDisabled>
                     <div class="createbank__error-message createbank__error-message--option" *ngIf="optionInput.invalid && optionInput.touched">
                       <span *ngIf="optionInput.errors?.['required']">Option text is required</span>
                     </div>
@@ -155,10 +168,17 @@
                     type="button" 
                     class="createbank__btn createbank__btn--remove" 
                     (click)="removeOption(questionIndex, optionIndex)"
+                    (mousedown)="$event.stopPropagation()"
                     [disabled]="question.options.length <= 2">
                     ×
                   </button>
+                  
+                  <!-- Drag Handle -->
+                  <div class="drag-handle" cdkDragHandle>
+                    <span class="drag-icon">⋮⋮</span>
+                  </div>
                 </div>
+              </div>
               </div>
 
               <button 

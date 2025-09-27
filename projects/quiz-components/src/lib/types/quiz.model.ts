@@ -1,6 +1,7 @@
 export interface QuizOption {
   text: string;
   isCorrect: boolean;
+  order: number;
 }
 
 export interface QuizQuestion {
@@ -41,6 +42,7 @@ export interface BackendQuestion {
 export interface BackendOption {
   text: string;
   isCorrect: boolean;
+  order: number;
 }
 
 export interface ValidationError {

@@ -15,10 +15,11 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { createQuizBank, clearError } from '../../store/quiz.actions';
 import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store/quiz.selectors';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'qc-createbank',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DragDropModule],
   templateUrl: './createbank.html',
   styleUrl: './createbank.scss'
 })
@@ -77,8 +78,8 @@ export class Createbank implements OnInit, OnDestroy {
     const newQuestion: QuizQuestion = {
       description: '',
       options: [
-        { text: '', isCorrect: true },  
-        { text: '', isCorrect: false }  
+        { text: '', isCorrect: true, order: 0 },  
+        { text: '', isCorrect: false, order: 1 }  
       ]
     };
 
@@ -106,7 +107,8 @@ export class Createbank implements OnInit, OnDestroy {
     if (question) {
       const newOption: QuizOption = {
         text: '',
-        isCorrect: false
+        isCorrect: false,
+        order: question.options.length
       };
       question.options.push(newOption);
     }
@@ -123,6 +125,10 @@ export class Createbank implements OnInit, OnDestroy {
       const isRemovingCorrect = question.options[optionIndex].isCorrect;
       
       question.options.splice(optionIndex, 1);
+      
+      question.options.forEach((option, index) => {
+        option.order = index;
+      });
       
       if (isRemovingCorrect && question.options.length > 0) {
         question.options[0].isCorrect = true;
@@ -200,6 +206,22 @@ export class Createbank implements OnInit, OnDestroy {
    */
   getOptionLabel(optionIndex: number): string {
     return String.fromCharCode(97 + optionIndex); // 97 is ASCII for 'a'
+  }
+
+  /**
+   * Handles drag and drop reordering of options
+   * @param event - The drag drop event
+   * @param questionIndex - The index of the question containing the options
+   */
+  onOptionDrop(event: CdkDragDrop<QuizOption[]>, questionIndex: number): void {
+    const question = this.quizData.questions[questionIndex];
+    if (question && event.previousIndex !== event.currentIndex) {
+      moveItemInArray(question.options, event.previousIndex, event.currentIndex);
+      
+      question.options.forEach((option, index) => {
+        option.order = index;
+      });
+    }
   }
 
   /**
@@ -285,7 +307,8 @@ export class Createbank implements OnInit, OnDestroy {
         description: question.description.trim(),
         options: question.options.map((option: QuizOption): BackendOption => ({
           text: option.text.trim(),
-          isCorrect: option.isCorrect 
+          isCorrect: option.isCorrect,
+          order: option.order
         }))
       }))
     };
