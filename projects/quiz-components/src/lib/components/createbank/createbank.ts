@@ -37,6 +37,7 @@ export class Createbank implements OnInit, OnDestroy {
   
   successMessage: string = '';
   validationError: string = '';
+  showConfirmation: boolean = false;
   private successTimeout?: number;
   private destroy$ = new Subject<void>();
 
@@ -155,6 +156,28 @@ export class Createbank implements OnInit, OnDestroy {
   }
 
   /**
+   * Shows the confirmation dialog for resetting the form
+   */
+  showResetConfirmation(): void {
+    this.showConfirmation = true;
+  }
+
+  /**
+   * Closes the confirmation dialog
+   */
+  closeConfirmation(): void {
+    this.showConfirmation = false;
+  }
+
+  /**
+   * Confirms the reset action and resets the form
+   */
+  confirmReset(): void {
+    this.resetForm();
+    this.closeConfirmation();
+  }
+
+  /**
    * Resets the entire form to its initial state
    */
   resetForm(): void {
@@ -168,6 +191,15 @@ export class Createbank implements OnInit, OnDestroy {
     
     this.clearMessages();
     this.addQuestion();
+  }
+
+  /**
+   * Gets the option label for display
+   * @param optionIndex - The index of the option
+   * @returns The letter label for the option
+   */
+  getOptionLabel(optionIndex: number): string {
+    return String.fromCharCode(97 + optionIndex); // 97 is ASCII for 'a'
   }
 
   /**

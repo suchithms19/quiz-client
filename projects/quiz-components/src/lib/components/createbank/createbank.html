@@ -79,7 +79,7 @@
 
       <div class="createbank__section">
         <div class="createbank__section-header">
-          <h2>Questions ({{ quizData.questions.length }})</h2>
+          <h2>Questions - {{ quizData.questions.length }}</h2>
           <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
             + Add Question
           </button>
@@ -133,8 +133,8 @@
                       [checked]="option.isCorrect"
                       (change)="setCorrectOption(questionIndex, optionIndex)">
                     <span class="radio-custom"></span>
-                    Correct
                   </label>
+                  <div class="option-label">{{ getOptionLabel(optionIndex).toUpperCase() }}</div>
                   
                   <div class="option-input-wrapper">
                     <input 
@@ -195,7 +195,7 @@
           <button 
             type="button" 
             class="createbank__btn createbank__btn--secondary" 
-            (click)="resetForm()">
+            (click)="showResetConfirmation()">
             Reset Form
           </button>
           <button 
@@ -207,5 +207,25 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="confirmation-modal" *ngIf="showConfirmation" (click)="closeConfirmation()">
+  <div class="confirmation-modal__content" (click)="$event.stopPropagation()">
+    <div class="confirmation-modal__header">
+      <h3>Confirm Reset</h3>
+      <button class="confirmation-modal__close" (click)="closeConfirmation()">&times;</button>
+    </div>
+    <div class="confirmation-modal__body">
+      <p>Are you sure you want to reset the form? All your progress will be lost.</p>
+    </div>
+    <div class="confirmation-modal__footer">
+      <button class="createbank__btn createbank__btn--secondary" (click)="closeConfirmation()">
+        Cancel
+      </button>
+      <button class="createbank__btn createbank__btn--danger" (click)="confirmReset()">
+        Reset Form
+      </button>
+    </div>
   </div>
 </div>
