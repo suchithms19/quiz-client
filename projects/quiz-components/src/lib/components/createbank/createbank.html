@@ -135,7 +135,7 @@
                   <label class="radio-label" [attr.for]="'correct_' + questionIndex + '_' + optionIndex" (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
                     <input 
                       type="radio" 
-                      [id]="'correct_' + questionIndex"
+                      [id]="'correct_' + questionIndex + '_' + optionIndex"
                       [name]="'correct_' + questionIndex" 
                       [checked]="option.isCorrect"
                       (change)="setCorrectOption(questionIndex, optionIndex)"
