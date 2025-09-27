@@ -208,6 +208,10 @@ export class Createbank implements OnInit, OnDestroy {
     return String.fromCharCode(97 + optionIndex); // 97 is ASCII for 'a'
   }
 
+  trackByIndex(index: number): number {
+    return index;
+  }
+
   /**
    * Handles drag and drop reordering of options
    * @param event - The drag drop event
@@ -216,11 +220,19 @@ export class Createbank implements OnInit, OnDestroy {
   onOptionDrop(event: CdkDragDrop<QuizOption[]>, questionIndex: number): void {
     const question = this.quizData.questions[questionIndex];
     if (question && event.previousIndex !== event.currentIndex) {
-      moveItemInArray(question.options, event.previousIndex, event.currentIndex);
+      const newOptions = [...question.options];
       
-      question.options.forEach((option, index) => {
-        option.order = index;
-      });
+      moveItemInArray(newOptions, event.previousIndex, event.currentIndex);
+      
+      const updatedOptions = newOptions.map((option, index) => ({
+        text: option.text,
+        isCorrect: option.isCorrect,
+        order: index
+      }));
+      
+      question.options = updatedOptions;
+      
+      this.quizData.questions[questionIndex] = { ...question };
     }
   }
 
