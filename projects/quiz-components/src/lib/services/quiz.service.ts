@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment.prod';
-import { BackendQuizData, QuizResponse, ApiError } from '../types/quiz.model';
+import { BackendQuizData, QuizResponse, ApiError } from '../models/quiz.model';
 
 
 @Injectable({

@@ -10,7 +10,7 @@ import {
   BackendQuizData, 
   BackendQuestion, 
   BackendOption 
-} from '../../types/quiz.model';
+} from '../../models/quiz.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { createQuizBank, clearError } from '../../store/quiz.actions';

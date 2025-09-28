@@ -1,5 +1,5 @@
 import { QuizService } from './quiz.service';
-import { BackendQuizData } from '../types/quiz.model';
+import { BackendQuizData } from '../models/quiz.model';
 import { it, expect, beforeEach, describe } from '@jest/globals';
 import { jest } from '@jest/globals';
 import { of, throwError } from 'rxjs';
@@ -16,8 +16,8 @@ describe('QuizService Logic', () => {
     questions: [{
       description: 'What is 2+2?',
       options: [
-        { text: '3', isCorrect: false },
-        { text: '4', isCorrect: true }
+        { text: '3', isCorrect: false, order: 0 },
+        { text: '4', isCorrect: true, order: 1 }
       ]
     }]
   };

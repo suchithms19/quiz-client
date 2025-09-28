@@ -5,7 +5,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
-import { quizReducer, QuizEffects } from 'quiz-components';
+import { quizReducer, QuizEffects, qbankReducer, QbankEffects } from 'quiz-components';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,8 +13,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({ quiz: quizReducer }),
-    provideEffects(QuizEffects),
+    provideStore({ quiz: quizReducer, qbank: qbankReducer }),
+    provideEffects(QuizEffects, QbankEffects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: true,

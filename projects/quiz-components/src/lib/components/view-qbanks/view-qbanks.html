@@ -1,0 +1,36 @@
+<div class="qbank">
+  <mat-tab-group (selectedTabChange)="setTab($event.index === 0 ? 'active' : 'inactive')" class="tab-group">
+    <mat-tab label="Active"></mat-tab>
+    <mat-tab label="Inactive"></mat-tab>
+  </mat-tab-group>
+  <div class="qbank__list">
+    @if (loading$ | async) {
+      <div class="loader">Loading qbanks...</div>
+    }
+    @else if (error$ | async; as error) {
+      <div class="error">Error: {{ error.message || 'Failed to load qbanks' }}</div>
+    }
+    @else {
+      @for (qbank of (qbanks$ | async); track qbank._id) {
+        @if ((activeTab === 'active' && qbank.status) || (activeTab === 'inactive' && !qbank.status)) {
+          <div class="qbank__card">
+            <div class="qbank__title">
+              {{ qbank.name }}
+              @if (qbank.createdAt) {
+                <div class="qbank__date">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</div>
+              }
+            </div>
+            <div class="qbank__details">
+              <div class="qbank__questions">Questions: {{ qbank.noOfQuestions }}</div>
+            </div>
+            <div class="qbank__actions">
+              <button class="qbank__button qbank__button--modify" [disabled]="!qbank.status">Modify</button>
+              <button class="qbank__button qbank__button--review" [disabled]="!qbank.status">Review</button>
+            </div>
+          </div>
+        }
+      }
+      
+    }
+  </div>
+</div>
