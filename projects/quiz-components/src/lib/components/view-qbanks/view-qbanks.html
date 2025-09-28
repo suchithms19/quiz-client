@@ -1,36 +1,75 @@
 <div class="qbank">
+  <div class="qbank__header">
+    <h1 class="qbank__title-main">Quiz Banks</h1>
+  </div>
+  
   <mat-tab-group (selectedTabChange)="setTab($event.index === 0 ? 'active' : 'inactive')" class="tab-group">
-    <mat-tab label="Active"></mat-tab>
+    <mat-tab label="Active" ></mat-tab>
     <mat-tab label="Inactive"></mat-tab>
   </mat-tab-group>
+  
   <div class="qbank__list">
     @if (loading$ | async) {
-      <div class="loader">Loading qbanks...</div>
+      <div class="qbank__skeleton-container">
+        @for (item of [1,2,3,4]; track item) {
+          <div class="qbank__skeleton-card">
+            <div class="skeleton-content">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-date"></div>
+            </div>
+            <div class="skeleton-questions"></div>
+            <div class="skeleton-actions">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </div>
+        }
+      </div>
     }
     @else if (error$ | async; as error) {
-      <div class="error">Error: {{ error.message || 'Failed to load qbanks' }}</div>
+      <div class="error">
+        <div class="error__content">
+          <h3>Something went wrong</h3>
+          <p>{{ error.message || 'Failed to load qbanks' }}</p>
+        </div>
+      </div>
     }
     @else {
       @for (qbank of (qbanks$ | async); track qbank._id) {
         @if ((activeTab === 'active' && qbank.status) || (activeTab === 'inactive' && !qbank.status)) {
-          <div class="qbank__card">
-            <div class="qbank__title">
-              {{ qbank.name }}
-              @if (qbank.createdAt) {
-                <div class="qbank__date">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</div>
-              }
-            </div>
+          <div class="qbank__card" [class.qbank__card--inactive]="!qbank.status">
+             <div class="qbank__title">
+               {{ qbank.name }}
+               @if (qbank.createdAt && qbank.status) {
+                 <div class="qbank__date">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</div>
+               }
+             </div>
+            
             <div class="qbank__details">
-              <div class="qbank__questions">Questions: {{ qbank.noOfQuestions }}</div>
+              <div class="qbank__questions">
+                <span class="questions-count">{{ qbank.noOfQuestions || 0 }}</span>
+                <span class="questions-label">Questions</span>
+              </div>
             </div>
+            
             <div class="qbank__actions">
-              <button class="qbank__button qbank__button--modify" [disabled]="!qbank.status">Modify</button>
-              <button class="qbank__button qbank__button--review" [disabled]="!qbank.status">Review</button>
+              <button class="qbank__button qbank__button--modify" [disabled]="!qbank.status" title="Modify question bank">
+                Modify
+              </button>
+              <button class="qbank__button qbank__button--review" [disabled]="!qbank.status" title="Review questions">
+                Review
+              </button>
             </div>
           </div>
         }
       }
       
+      @if ((qbanks$ | async)?.length === 0) {
+        <div class="qbank__empty">
+          <h3>No question banks found</h3>
+          <p>Create your first question bank to get started.</p>
+        </div>
+      }
     }
   </div>
 </div>
