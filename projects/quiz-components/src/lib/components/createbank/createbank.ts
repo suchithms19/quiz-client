@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { 
@@ -13,7 +14,7 @@ import {
 } from '../../models/quiz.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { createQuizBank, clearError } from '../../store/quiz.actions';
+import { createQuizBank, clearError, resetQuizState } from '../../store/quiz.actions';
 import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store/quiz.selectors';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -42,7 +43,7 @@ export class Createbank implements OnInit, OnDestroy {
   private successTimeout?: number;
   private destroy$ = new Subject<void>();
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private router: Router) {
     this.isLoading$ = this.store.select(selectIsLoading);
     this.errorMessage$ = this.store.select(selectErrorMessage);
     this.isSuccess$ = this.store.select(selectIsSuccess);
@@ -50,13 +51,16 @@ export class Createbank implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(resetQuizState());
+    
     this.isSuccess$.pipe(takeUntil(this.destroy$)).subscribe(isSuccess => {
       if (isSuccess) {
         this.successMessage = 'Quiz bank created successfully!';
         this.successTimeout = setTimeout(() => {
           this.resetForm();
           this.successMessage = '';
-        }, 3000);
+          this.router.navigate(['/view-qbanks'])
+        }, 1000); 
       }
     });
   }
