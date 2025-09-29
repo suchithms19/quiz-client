@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
-import { loadQbanks, loadQbanksSuccess, loadQbanksFailure,loadSelectedQbank,loadSelectedQbankSuccess,loadSelectedQbankFailure } from "./qbank.actions";
-import { Qbank, FullQbank } from "../models/qbank.model";
+import { loadQbanks, loadQbanksSuccess, loadQbanksFailure } from "./qbank.actions";
+import { Qbank } from "../models/qbank.model";
 import { 
     loadQbankById,
     loadQbankByIdSuccess,
@@ -18,9 +18,6 @@ export interface QbankState {
     loading: boolean;
     currentQbankLoading: boolean; 
     error: any;
-    selectedQbank: FullQbank | null;
-    selectedLoading: boolean;
-    selectedError: any;
 }
 
 export const initialState: QbankState = {
@@ -28,9 +25,6 @@ export const initialState: QbankState = {
     currentQbank: null,
     loading: false,
     error: null,
-    selectedQbank: null,
-    selectedLoading: false,
-    selectedError: null,
     currentQbankLoading: false,
 };
 
@@ -40,11 +34,8 @@ export const qbankReducer = createReducer(
     on(loadQbanks, (state) => ({ ...state, loading: true, error: null })),
     on(loadQbanksSuccess, (state, { qbanks }) => ({ ...state, qbanks, loading: false })),
     on(loadQbanksFailure, (state, { error }) => ({ ...state, error, loading: false })),
-    on(loadSelectedQbank, (state) => ({ ...state, selectedLoading: true })),
-    on(loadSelectedQbankSuccess, (state, { fullQbank }) => ({ ...state, selectedQbank: fullQbank, selectedLoading: false })),
-    on(loadSelectedQbankFailure, (state, { error }) => ({ ...state, selectedError: error, selectedLoading: false })),
     
-    
+    // Load Qbank by ID actions
     on(loadQbankById, (state) => ({ ...state, currentQbankLoading: true, error: null })),
     on(loadQbankByIdSuccess, (state, { qbank }) => ({ 
         ...state, 

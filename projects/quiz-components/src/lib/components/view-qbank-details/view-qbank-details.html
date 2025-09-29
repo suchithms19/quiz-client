@@ -19,7 +19,7 @@
     <div class="error">
       <div class="error__content">
         <h3>Something went wrong</h3>
-        <p>{{ error.message || 'Failed to load quiz bank details' }}</p>
+        <p>{{ (error?.message) || error || 'Failed to load quiz bank details' }}</p>
       </div>
     </div>
   } @else {
@@ -36,7 +36,7 @@
               <p>Add questions to this quiz bank to get started.</p>
             </div>
           } @else {
-            @for (question of qbank.questions; track question._id; let i = $index) {
+            @for (question of qbank.questions; track i; let i = $index) {
               <div class="qbank-details__question-card">
                 <p class="qbank-details__question-text">{{ i + 1 }}. {{ question.description }}</p>
                 <ul class="qbank-details__options">

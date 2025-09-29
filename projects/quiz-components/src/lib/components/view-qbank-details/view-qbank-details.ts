@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { QbankState } from '../../store';
-import { selectSelectedQbank, selectSelectedQbankLoading, selectSelectedQbankError } from '../../store/qbank.selectors';
-import { loadSelectedQbank } from '../../store/qbank.actions';
-import { FullQbank } from '../../models/qbank.model';
+import { selectCurrentQbank, selectCurrentQbankLoading, selectQbankError } from '../../store/qbank.selectors';
+import { loadQbankById } from '../../store/qbank.actions';
+import { QbankWithQuestions } from '../../models/qbank.model';
 
 @Component({
   selector: 'qc-view-qbank-details',
@@ -16,7 +16,7 @@ import { FullQbank } from '../../models/qbank.model';
   styleUrls: ['./view-qbank-details.scss']
 })
 export class ViewQbankDetails implements OnInit {
-  qbank$: Observable<FullQbank | null>;
+  qbank$: Observable<QbankWithQuestions | null>;
   loading$: Observable<boolean>;
   error$: Observable<any>;
 
@@ -24,15 +24,15 @@ export class ViewQbankDetails implements OnInit {
     private store: Store<{ qbank: QbankState }>,
     private route: ActivatedRoute
   ) {
-    this.qbank$ = this.store.select(selectSelectedQbank);
-    this.loading$ = this.store.select(selectSelectedQbankLoading);
-    this.error$ = this.store.select(selectSelectedQbankError);
+    this.qbank$ = this.store.select(selectCurrentQbank);
+    this.loading$ = this.store.select(selectCurrentQbankLoading);
+    this.error$ = this.store.select(selectQbankError);
   }
 
   ngOnInit(): void {
     const qbankId = this.route.snapshot.paramMap.get('id');
     if (qbankId) {
-      this.store.dispatch(loadSelectedQbank({ qbankId }));
+      this.store.dispatch(loadQbankById({ qbankId }));
     }
   }
 }

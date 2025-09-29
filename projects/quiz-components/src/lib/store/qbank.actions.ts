@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Qbank,FullQbank, QbankWithQuestions } from "../models/qbank.model";
+import { Qbank, QbankWithQuestions } from "../models/qbank.model";
 import { BackendQuizData, QuizResponse } from "../models/quiz.model";
 
 export const loadQbanks = createAction(
@@ -15,20 +15,6 @@ export const loadQbanksFailure = createAction(
     '[Qbank] Load Qbanks Failure',
     props<{ error: string }>()
 );
-export const loadSelectedQbank = createAction(
-    '[Qbank] Load Selected Qbank',
-    props<{ qbankId: string }>()
-    
-);
-export const loadSelectedQbankSuccess = createAction(
-    '[Qbank] Load Selected Qbank Success',
-    props<{ fullQbank: FullQbank }>()
-);
-export const loadSelectedQbankFailure = createAction(
-    '[Qbank] Load Selected Qbank Failure',
-    props<{ error: string }>()
-);
-
 export const loadQbankById = createAction(
     '[Qbank] Load Qbank By ID',
     props<{ qbankId: string }>()
