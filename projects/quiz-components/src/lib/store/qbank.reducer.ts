@@ -15,9 +15,9 @@ import { Qbank, QbankWithQuestions } from "../models/qbank.model";
 
 export interface QbankState {
     qbanks: Qbank[];
-    currentQbank: QbankWithQuestions | null; // For editing
+    currentQbank: QbankWithQuestions | null; 
     loading: boolean;
-    currentQbankLoading: boolean; // Separate loading state for current qbank
+    currentQbankLoading: boolean; 
     error: any;
 }
 
@@ -50,7 +50,7 @@ export const qbankReducer = createReducer(
     })),
     
     
-    on(updateQbank, (state) => ({ ...state, currentQbankLoading: true, error: null })),
+    on(updateQbank, (state) => ({ ...state, currentQbankLoading: false, error: null })),
     on(updateQbankSuccess, (state, { qbank }) => ({ 
         ...state, 
         currentQbankLoading: false,
