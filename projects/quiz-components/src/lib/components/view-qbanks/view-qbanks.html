@@ -56,7 +56,7 @@
               <button class="qbank__button qbank__button--modify" [disabled]="!qbank.status" title="Modify question bank">
                 Modify
               </button>
-              <button class="qbank__button qbank__button--review" [disabled]="!qbank.status" title="Review questions">
+              <button class="qbank__button qbank__button--review" (click)="reviewQbank(qbank._id)" [disabled]="!qbank.status" title="Review questions">
                 Review
               </button>
             </div>

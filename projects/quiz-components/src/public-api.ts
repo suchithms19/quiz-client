@@ -3,6 +3,7 @@ export * from './lib/components/header/header';
 export * from './lib/components/landing/landing';
 export * from './lib/components/navbar/navbar';
 export * from './lib/components/view-qbanks/view-qbanks';
+export * from './lib/components/view-qbank-details/view-qbank-details';
 export * from './lib/models/quiz.model';
 export * from './lib/models/qbank.model';
 export * from './lib/services/quiz.service';
@@ -13,11 +14,13 @@ import { Header } from './lib/components/header/header';
 import { Landing } from './lib/components/landing/landing';
 import { Navbar } from './lib/components/navbar/navbar';
 import { ViewQbanks } from './lib/components/view-qbanks/view-qbanks';
+import { ViewQbankDetails } from './lib/components/view-qbank-details/view-qbank-details';
 
 export const QUIZ_COMPONENTS = [
   Createbank,
   Header,
   Landing,
   Navbar,
-  ViewQbanks
+  ViewQbanks,
+  ViewQbankDetails
 ] as const;

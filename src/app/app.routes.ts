@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Createbank, Landing, ViewQbanks } from 'quiz-components';
+import { Createbank, Landing, ViewQbanks, ViewQbankDetails } from 'quiz-components';
 
 export const routes: Routes = [
   {
@@ -9,6 +9,10 @@ export const routes: Routes = [
   {
     path: 'view-qbanks',
     component: ViewQbanks
+  },
+  {
+    path: 'view-qbanks/:id',
+    component: ViewQbankDetails 
   },
   {
     path: 'dashboard',

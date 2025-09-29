@@ -7,3 +7,17 @@ export interface Qbank {
   status: boolean;
   createdAt?: string;
 }
+ export interface Option{
+  text:string;
+  isCorrect:boolean;
+ }
+
+ export interface Question{
+   description:string;
+   options:Option[];
+  _id:string;
+  
+ }
+ export interface FullQbank extends Qbank{
+  questions:Question[];
+ }

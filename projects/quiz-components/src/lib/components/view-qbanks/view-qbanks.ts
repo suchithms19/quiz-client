@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { loadQbanks } from '../../store/qbank.actions';
 import { Qbank } from '../../models/qbank.model';
 import { MatTabsModule } from '@angular/material/tabs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'qc-view-qbanks',
@@ -22,7 +23,7 @@ export class ViewQbanks implements OnInit {
 
   activeTab: 'active' | 'inactive' = 'active';
 
-  constructor(private store: Store<{ qbank: QbankState }>) {
+  constructor(private store: Store<{ qbank: QbankState }>, private router: Router) {
     this.qbanks$ = this.store.select(selectQbanks);
     this.loading$ = this.store.select(selectQbankLoading);
     this.error$ = this.store.select(selectQbankError);
@@ -34,5 +35,8 @@ export class ViewQbanks implements OnInit {
   
   setTab(tab: 'active' | 'inactive'): void {
     this.activeTab = tab;
+  }
+  reviewQbank(qbankId: string): void {
+    this.router.navigate(['/view-qbanks', qbankId]);
   }
 }

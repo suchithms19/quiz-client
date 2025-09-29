@@ -1,0 +1,59 @@
+<div class="qbank-details">
+  <div class="qbank-details__header">
+    <h1 class="qbank-details__title-main">Quiz Bank Details</h1>
+  </div>
+
+  @if (loading$ | async) {
+    <div class="qbank-details__skeleton-container">
+      @for (item of [1, 2, 3]; track item) {
+        <div class="qbank-details__skeleton-card">
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-option"></div>
+            <div class="skeleton-option"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (error$ | async; as error) {
+    <div class="error">
+      <div class="error__content">
+        <h3>Something went wrong</h3>
+        <p>{{ error.message || 'Failed to load quiz bank details' }}</p>
+      </div>
+    </div>
+  } @else {
+    <div class="qbank-details__content">
+      @if (qbank$ | async; as qbank) {
+        <h2 class="qbank-details__title">{{ qbank.name }}</h2>
+        <p class="qbank-details__info">Category: {{ qbank.category }}</p>
+        <p class="qbank-details__info">Created: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
+
+        <div class="qbank-details__questions">
+          @if (qbank.questions.length === 0) {
+            <div class="qbank-details__empty">
+              <h3>No questions found</h3>
+              <p>Add questions to this quiz bank to get started.</p>
+            </div>
+          } @else {
+            @for (question of qbank.questions; track question._id) {
+              <div class="qbank-details__question-card">
+                <p class="qbank-details__question-text">{{ question.description }}</p>
+                <ul class="qbank-details__options">
+                  @for (option of question.options; track $index) {
+                    <li class="qbank-details__option" [class.correct]="option.isCorrect">
+                      {{ option.text }}
+                      @if (option.isCorrect) {
+                        <span class="correct-indicator"></span>
+                      }
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
