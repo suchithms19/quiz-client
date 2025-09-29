@@ -1,18 +1,17 @@
 $primary-color: #240f6e;
-$secondary-color: #007bff;
-$disabled-color: #cccccc;
-$card-bg: #fff;
-$card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$inactive-color: #6b7280;
+$card-bg: #ffffff;
+$border-color: rgba(229, 231, 235, 0.9);
+$card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 $error-color: #d32f2f;
 $success-color: #10b981;
-$inactive-color: #6b7280;
 
 .qbank-details {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+  padding: 32px 16px;
+  background: #f7f8fb;
   min-height: calc(100vh - 60px);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -27,29 +26,7 @@ $inactive-color: #6b7280;
     font-size: 48px;
     font-weight: 700;
     color: $primary-color;
-    margin: 0 0 8px 0;
-  }
-
-  &__header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 900px;
-    margin-bottom: 16px;
-  }
-
-  &__title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: $primary-color;
     margin: 0;
-  }
-
-  &__category {
-    font-size: 1.2rem;
-    color: $inactive-color;
-    font-weight: 500;
   }
 
   &__content {
@@ -57,29 +34,39 @@ $inactive-color: #6b7280;
     max-width: 900px;
   }
 
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin: 0 0 4px 0;
+  }
+
   &__info {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: $inactive-color;
-    margin: 8px 0;
+    margin: 4px 0 0 0;
   }
 
   &__questions {
-    margin-top: 32px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   &__question-card {
     background: $card-bg;
-    padding: 24px;
+    padding: 16px;
     border-radius: 12px;
+    border: 1px solid $border-color;
     box-shadow: $card-shadow;
-    margin-bottom: 16px;
   }
 
   &__question-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $primary-color;
-    margin-bottom: 16px;
+    margin: 0 0 10px 0;
   }
 
   &__options {
@@ -89,59 +76,36 @@ $inactive-color: #6b7280;
   }
 
   &__option {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: $inactive-color;
-    padding: 8px 0;
-    
+    padding: 6px 0;
+
     &.correct {
       color: $success-color;
       font-weight: 600;
     }
   }
 
-  .correct-indicator {
-    font-size: 0.875rem;
-    color: $success-color;
-    margin-left: 8px;
-  }
 }
 
 .qbank-details__skeleton-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   width: 100%;
   max-width: 900px;
 }
 
 .qbank-details__skeleton-card {
   background: $card-bg;
-  padding: 24px;
+  padding: 16px;
   border-radius: 12px;
+  border: 1px solid $border-color;
   box-shadow: $card-shadow;
 
-  .skeleton-content {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .skeleton-title {
-    height: 20px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    width: 60%;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  .skeleton-option {
-    height: 16px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    width: 80%;
-    animation: pulse 1.5s ease-in-out infinite;
-    animation-delay: 0.2s;
-  }
+  .skeleton-content { display: flex; flex-direction: column; gap: 8px; }
+  .skeleton-title { height: 16px; background: #e5e7eb; border-radius: 4px; width: 50%; animation: pulse 1.4s ease-in-out infinite; }
+  .skeleton-option { height: 12px; background: #e5e7eb; border-radius: 4px; width: 70%; animation: pulse 1.4s ease-in-out infinite; animation-delay: 0.15s; }
 }
 
 .qbank-details__empty {
@@ -149,24 +113,13 @@ $inactive-color: #6b7280;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 64px 24px;
-  background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
-  border: 2px dashed #cbd5e1;
-  border-radius: 16px;
+  padding: 40px 16px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
 
-  h3 {
-    color: $primary-color;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 12px 0;
-  }
-
-  p {
-    color: $inactive-color;
-    font-size: 1rem;
-    margin: 0;
-    line-height: 1.6;
-  }
+  h3 { color: $primary-color; font-size: 1.25rem; font-weight: 700; margin: 0 0 8px 0; }
+  p { color: $inactive-color; font-size: 0.95rem; margin: 0; line-height: 1.6; }
 }
 
 .error {
@@ -174,34 +127,18 @@ $inactive-color: #6b7280;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 48px 24px;
-  background: linear-gradient(145deg, #fef2f2 0%, #fee2e2 100%);
+  padding: 32px 16px;
+  background: #fff8f8;
   border: 1px solid #fecaca;
-  border-radius: 16px;
-  box-shadow: $card-shadow;
+  border-radius: 12px;
 
   &__content {
-    h3 {
-      color: $error-color;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0 0 8px 0;
-    }
-
-    p {
-      color: #991b1b;
-      font-size: 1rem;
-      margin: 0;
-      line-height: 1.5;
-    }
+    h3 { color: $error-color; font-size: 1.25rem; font-weight: 700; margin: 0 0 6px 0; }
+    p { color: #991b1b; font-size: 0.95rem; margin: 0; line-height: 1.5; }
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

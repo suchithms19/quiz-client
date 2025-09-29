@@ -26,8 +26,12 @@
     <div class="qbank-details__content">
       @if (qbank$ | async; as qbank) {
         <h2 class="qbank-details__title">{{ qbank.name }}</h2>
-        <p class="qbank-details__info">Category: {{ qbank.category }}</p>
-        <p class="qbank-details__info">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
+        @if (qbank.category) {
+          <p class="qbank-details__info">Category: {{ qbank.category }}</p>
+        }
+        @if (qbank.createdAt) {
+          <p class="qbank-details__info">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
+        }
 
         <div class="qbank-details__questions">
           @if (qbank.questions.length === 0) {
@@ -43,9 +47,6 @@
                   @for (option of question.options; track $index; let j = $index) {
                     <li class="qbank-details__option" [class.correct]="option.isCorrect">
                       {{ ['A', 'B', 'C', 'D'][j] }}. {{ option.text }}
-                      @if (option.isCorrect) {
-                        <span class="correct-indicator"></span>
-                      }
                     </li>
                   }
                 </ul>
