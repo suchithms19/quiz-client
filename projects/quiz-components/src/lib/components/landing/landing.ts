@@ -28,8 +28,10 @@ export class Landing implements OnInit {
     this.analytics$ = this.quizService.getAnalytics();
     
     this.analytics$.subscribe({
-      next: () => {
-        this.isLoading = false;
+      next: (data) => {
+        if (data) {
+          this.isLoading = false;
+        }
       },
       error: (error) => {
         this.isLoading = false;

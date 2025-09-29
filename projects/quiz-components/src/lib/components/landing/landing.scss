@@ -18,6 +18,11 @@ $text-secondary: #6b7280;
   align-items: center;
   padding: 40px 20px;
   background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+  background-image: 
+    linear-gradient(90deg, rgba(36, 15, 110, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0, 123, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
   min-height: calc(100vh - 60px);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -34,6 +39,7 @@ $text-secondary: #6b7280;
     color: $primary-color;
     margin: 0 0 8px 0;
     text-shadow: 0 2px 4px rgba(36, 15, 110, 0.1);
+    line-height: 1.4;
   }
 
   &__content {
@@ -70,16 +76,17 @@ $text-secondary: #6b7280;
 
   &__card-title {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: $inactive-color;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    line-height: 1.4;
   }
 
   &__card-value {
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 800;
     color: $primary-color;
     margin: 0;
     line-height: 1.2;
@@ -114,14 +121,19 @@ $text-secondary: #6b7280;
 
   &__status-label {
     font-size: 14px;
+    font-weight: 600;
     color: $text-secondary;
     margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
   }
 
   &__status-value {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 800;
     color: $primary-color;
+    line-height: 1.2;
   }
 
   // Skeleton Loading States
@@ -131,12 +143,29 @@ $text-secondary: #6b7280;
     gap: 20px;
     width: 100%;
     max-width: 900px;
+    margin-bottom: 32px;
   }
 
   &__skeleton-card {
     background: $card-bg;
     border-radius: 16px;
     padding: 24px;
+    box-shadow: $card-shadow;
+    border: 1px solid $border-color;
+  }
+
+  &__skeleton-status {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  &__skeleton-status-card {
+    background: $card-bg;
+    border-radius: 12px;
+    padding: 20px;
     box-shadow: $card-shadow;
     border: 1px solid $border-color;
   }
@@ -154,6 +183,7 @@ $text-secondary: #6b7280;
     animation: shimmer 1.5s infinite;
     border-radius: 4px;
     width: 60%;
+    margin-bottom: 8px;
   }
 
   .skeleton-value {
@@ -163,6 +193,7 @@ $text-secondary: #6b7280;
     animation: shimmer 1.5s infinite;
     border-radius: 4px;
     width: 40%;
+    margin-top: 8px;
   }
 }
 
