@@ -16,7 +16,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { createQuizBank, clearError, resetQuizState } from '../../store/quiz.actions';
 import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store/quiz.selectors';
-import { loadQbankById, updateQbank, clearCurrentQbank } from '../../store/qbank.actions';
+import { loadQbankById, updateQbank, clearCurrentQbank, updateQbankSuccess } from '../../store/qbank.actions';
 import { selectCurrentQbank, selectCurrentQbankLoading } from '../../store/qbank.selectors';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -404,24 +404,20 @@ export class Createbank implements OnInit, OnDestroy {
     };
 
     if (this.isEditMode && this.currentQbankId) {
-      
+      // Update existing qbank
       this.store.dispatch(updateQbank({ 
         qbankId: this.currentQbankId, 
         quizData: backendData 
       }));
       
-      this.currentQbankLoading$.pipe(
-        takeUntil(this.destroy$),
-        filter(loading => !loading)
-      ).subscribe(() => {
-        this.successMessage = 'Quiz bank updated successfully!';
-        this.successTimeout = setTimeout(() => {
-          this.successMessage = '';
-          this.router.navigate(['/view-qbanks']);
-        }, 1000);
-      });
+      // Show success message and navigate
+      this.successMessage = 'Quiz bank updated successfully!';
+      this.successTimeout = setTimeout(() => {
+        this.successMessage = '';
+        this.router.navigate(['/view-qbanks']);
+      }, 1000);
     } else {
-      
+      // Create new qbank
       this.store.dispatch(createQuizBank({ quizData: backendData }));
     }
   }
