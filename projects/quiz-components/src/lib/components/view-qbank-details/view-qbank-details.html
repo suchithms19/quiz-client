@@ -27,7 +27,7 @@
       @if (qbank$ | async; as qbank) {
         <h2 class="qbank-details__title">{{ qbank.name }}</h2>
         <p class="qbank-details__info">Category: {{ qbank.category }}</p>
-        <p class="qbank-details__info">Created: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
+        <p class="qbank-details__info">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
 
         <div class="qbank-details__questions">
           @if (qbank.questions.length === 0) {
@@ -36,13 +36,13 @@
               <p>Add questions to this quiz bank to get started.</p>
             </div>
           } @else {
-            @for (question of qbank.questions; track question._id) {
+            @for (question of qbank.questions; track question._id; let i = $index) {
               <div class="qbank-details__question-card">
-                <p class="qbank-details__question-text">{{ question.description }}</p>
+                <p class="qbank-details__question-text">{{ i + 1 }}. {{ question.description }}</p>
                 <ul class="qbank-details__options">
-                  @for (option of question.options; track $index) {
+                  @for (option of question.options; track $index; let j = $index) {
                     <li class="qbank-details__option" [class.correct]="option.isCorrect">
-                      {{ option.text }}
+                      {{ ['A', 'B', 'C', 'D'][j] }}. {{ option.text }}
                       @if (option.isCorrect) {
                         <span class="correct-indicator"></span>
                       }
