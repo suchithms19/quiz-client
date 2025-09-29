@@ -87,8 +87,9 @@
         <div class="createbank__section-header">
           <h2>Questions - {{ quizData.questions.length }}</h2>
           <div class="createbank__header-actions">
-            <button type="button" class="createbank__btn createbank__btn--secondary" (click)="openAiModal()">
-              Generate with AI
+            <button type="button" class="createbank__btn createbank__btn--ai" (click)="openAiModal()">
+              <span class="createbank__btn-emoji" aria-hidden="true">✨</span>
+              <span>Generate with AI</span>
             </button>
             <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
               + Add Question
