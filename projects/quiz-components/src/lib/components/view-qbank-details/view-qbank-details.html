@@ -2,7 +2,7 @@
   <div class="qbank-details__header">
     <div class="qbank-details__header-row">
       <button type="button" class="qbank-details__back" (click)="on_back()" aria-label="Back to question banks">Back</button>
-      <h1 class="qbank-details__title-main">Quiz Bank Details</h1>
+      <h1 class="qbank-details__title-main">{{(qbank$|async)?.name}}</h1>
       <div class="qbank-details__spacer"></div>
     </div>
   </div>
@@ -30,7 +30,6 @@
     <div class="qbank-details__content">
       @if (qbank$ | async; as qbank) {
         <div class="qbank-details__meta">
-          <h2 class="qbank-details__title">{{ qbank.name }} </h2>
           <div class="qbank-details__meta-row">
             @if (qbank.category) {
               <span class="qbank-details__chip">{{ qbank.category.charAt(0).toUpperCase() + qbank.category.slice(1) }} </span>

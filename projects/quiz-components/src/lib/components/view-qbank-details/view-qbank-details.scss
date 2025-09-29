@@ -58,14 +58,8 @@ $success-color: #10b981;
 
   &__meta { margin-bottom: 8px; }
 
-  &__title {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: $primary-color;
-    margin: 0 0 6px 0;
-  }
-
-  &__meta-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+ 
+  &__meta-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; }
   &__chip { background: #eef2ff; color: $primary-color; border: 1px solid $border-color; padding: 4px 8px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; }
   &__date { color: $inactive-color; font-size: 0.95rem; }
 
