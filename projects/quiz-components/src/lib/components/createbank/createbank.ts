@@ -19,6 +19,7 @@ import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../stor
 import { loadQbankById, updateQbank, clearCurrentQbank, updateQbankSuccess } from '../../store/qbank.actions';
 import { selectCurrentQbank, selectCurrentQbankLoading } from '../../store/qbank.selectors';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
+import { AiService, AiGeneratedQuestion } from '../../services/ai.service';
 
 @Component({
   selector: 'qc-createbank',
@@ -54,7 +55,8 @@ export class Createbank implements OnInit, OnDestroy {
   constructor(
     private store: Store<AppState>, 
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private aiService: AiService
   ) {
     this.isLoading$ = this.store.select(selectIsLoading);
     this.errorMessage$ = this.store.select(selectErrorMessage);
@@ -326,6 +328,62 @@ export class Createbank implements OnInit, OnDestroy {
     if (this.successTimeout) {
       clearTimeout(this.successTimeout);
       this.successTimeout = undefined;
+    }
+  }
+
+  // --- AI Generation Feature ---
+  aiPromptTopic: string = '';
+  aiPromptCount: number = 5;
+  aiIsGenerating: boolean = false;
+  aiError: string = '';
+  aiModalOpen: boolean = false;
+
+  openAiModal(): void {
+    this.aiError = '';
+    this.aiPromptTopic = this.quizData.category || '';
+    this.aiPromptCount = Math.max(1, this.quizData.noOfQuestions || 5);
+    this.aiModalOpen = true;
+  }
+
+  closeAiModal(): void {
+    if (this.aiIsGenerating) return;
+    this.aiModalOpen = false;
+  }
+
+  async generateWithAi(): Promise<void> {
+    this.aiError = '';
+    const topic = (this.aiPromptTopic || '').trim();
+    const count = Number(this.aiPromptCount) || 1;
+
+    if (!topic) {
+      this.aiError = 'Please enter a topic';
+      return;
+    }
+    if (count < 1 || count > 20) {
+      this.aiError = 'Number of questions must be between 1 and 20';
+      return;
+    }
+
+    try {
+      this.aiIsGenerating = true;
+      const questions: AiGeneratedQuestion[] = await this.aiService.generateQuestions(topic, count);
+      const mapped: QuizQuestion[] = questions.map((q): QuizQuestion => ({
+        description: q.description,
+        options: q.options.slice(0, 4).map((opt, idx) => ({
+          text: opt.text,
+          isCorrect: opt.isCorrect,
+          order: idx
+        }))
+      }));
+
+      this.quizData.questions = [...mapped];
+      this.updateQuestionCount();
+      this.aiModalOpen = false;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to generate questions';
+      this.aiError = message;
+    } finally {
+      this.aiIsGenerating = false;
     }
   }
 

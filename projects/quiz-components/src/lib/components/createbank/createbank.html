@@ -86,9 +86,14 @@
       <div class="createbank__section">
         <div class="createbank__section-header">
           <h2>Questions - {{ quizData.questions.length }}</h2>
-          <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
-            + Add Question
-          </button>
+          <div class="createbank__header-actions">
+            <button type="button" class="createbank__btn createbank__btn--secondary" (click)="openAiModal()">
+              Generate with AI
+            </button>
+            <button type="button" class="createbank__btn createbank__btn--add-question" (click)="addQuestion()">
+              + Add Question
+            </button>
+          </div>
         </div>
 
         <div class="createbank__questions-list" *ngIf="quizData.questions.length > 0">
@@ -255,6 +260,34 @@
       </button>
       <button class="createbank__btn createbank__btn--danger" (click)="confirmReset()">
         Reset Form
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AI Generation Modal -->
+<div class="confirmation-modal" *ngIf="aiModalOpen" (click)="closeAiModal()">
+  <div class="confirmation-modal__content" (click)="$event.stopPropagation()">
+    <div class="confirmation-modal__header">
+      <h3>Generate Questions with AI</h3>
+      <button class="confirmation-modal__close" (click)="closeAiModal()" [disabled]="aiIsGenerating">&times;</button>
+    </div>
+    <div class="confirmation-modal__body">
+      <div class="createbank__form-group">
+        <label for="ai_topic" class="createbank__form-group-label">Topic</label>
+        <input id="ai_topic" class="createbank__input" [(ngModel)]="aiPromptTopic" name="ai_topic" placeholder="e.g. Arrays in JavaScript" />
+      </div>
+      <div class="createbank__form-group">
+        <label for="ai_count" class="createbank__form-group-label">Number of questions</label>
+        <input id="ai_count" type="number" min="1" max="20" class="createbank__input" [(ngModel)]="aiPromptCount" name="ai_count" />
+      </div>
+      <div class="createbank__status-error" *ngIf="aiError">{{ aiError }}</div>
+    </div>
+    <div class="confirmation-modal__footer">
+      <button class="createbank__btn createbank__btn--secondary" (click)="closeAiModal()" [disabled]="aiIsGenerating">Cancel</button>
+      <button class="createbank__btn createbank__btn--primary" (click)="generateWithAi()" [disabled]="aiIsGenerating">
+        <span *ngIf="aiIsGenerating">Generating...</span>
+        <span *ngIf="!aiIsGenerating">Generate</span>
       </button>
     </div>
   </div>
