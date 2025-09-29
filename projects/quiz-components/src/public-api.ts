@@ -6,6 +6,7 @@ export * from './lib/components/view-qbanks/view-qbanks';
 export * from './lib/components/view-qbank-details/view-qbank-details';
 export * from './lib/models/quiz.model';
 export * from './lib/models/qbank.model';
+export * from './lib/models/analytics.model';
 export * from './lib/services/quiz.service';
 export * from './lib/store';
 

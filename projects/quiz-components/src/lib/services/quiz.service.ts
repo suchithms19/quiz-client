@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment.prod';
 import { BackendQuizData, QuizResponse, ApiError } from '../models/quiz.model';
 import { QbankWithQuestions } from '../models/qbank.model';
+import { AnalyticsData } from '../models/analytics.model';
 
 
 @Injectable({
@@ -37,6 +38,14 @@ export class QuizService {
         return this.http.put<QuizResponse>(
             `${this.apiUrl}/qbanks/${qbankId}`,
             quizData
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    getAnalytics(): Observable<AnalyticsData> {
+        return this.http.get<AnalyticsData>(
+            `${this.apiUrl}/analytics`
         ).pipe(
             catchError(this.handleError)
         );

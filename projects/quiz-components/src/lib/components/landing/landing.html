@@ -1,10 +1,62 @@
-<section class="landing" aria-labelledby="landing-title">
-  <div class="landing__content">
-    <h1 id="landing-title" class="landing__title">Welcome to Quiz Builder</h1>
-    <p class="landing__subtitle">Craft engaging quizzes, store them securely, and review your creations anytime.</p>
-    <p class="landing__tagline">Unleash your creativity with powerful quiz-building tools!</p>
-    <div class="landing__image">
-      <img src="landing.jpg" alt="Illustration for Quiz Builder" class="landing__img">
-    </div>
+<div class="analytics">
+  <div class="analytics__header">
+    <h1 class="analytics__title-main">Dashboard</h1>
   </div>
-</section>
+
+  @if (isLoading) {
+    <div class="analytics__skeleton-container">
+      @for (item of [1,2,3]; track item) {
+        <div class="analytics__skeleton-card">
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-value"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="error">
+      <div class="error__content">
+        <h3>Something went wrong</h3>
+        <p>{{ error }}</p>
+        <button (click)="refreshAnalytics()" class="error__retry">Try Again</button>
+      </div>
+    </div>
+  } @else if (analytics$ | async; as analytics) {
+    <div class="analytics__content">
+      <div class="analytics__overview">
+        <div class="analytics__card">
+          <div class="analytics__card-header">
+            <h3 class="analytics__card-title">Total Quizzes</h3>
+          </div>
+          <div class="analytics__card-value">{{ analytics.totals.totalQuizzes }}</div>
+        </div>
+        
+        <div class="analytics__card">
+          <div class="analytics__card-header">
+            <h3 class="analytics__card-title">Active Quizzes</h3>
+          </div>
+          <div class="analytics__card-value analytics__card-value--success">{{ analytics.totals.activeQuizzes }}</div>
+        </div>
+        
+        <div class="analytics__card">
+          <div class="analytics__card-header">
+            <h3 class="analytics__card-title">Total Questions</h3>
+          </div>
+          <div class="analytics__card-value">{{ analytics.totals.totalQuestions }}</div>
+        </div>
+      </div>
+
+      <div class="analytics__status">
+         @for (status of analytics.statusBreakdown; track status.status) {
+           <div class="analytics__status-card">
+             <div class="analytics__status-label">
+               {{ status.status | titlecase }}
+             </div>
+             <div class="analytics__status-value">{{ status.count }}</div>
+           </div>
+         }
+       </div>
+    </div>
+  }
+</div>
