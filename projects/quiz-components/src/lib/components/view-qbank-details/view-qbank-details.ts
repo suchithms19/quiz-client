@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { QbankState } from '../../store';
@@ -22,7 +23,8 @@ export class ViewQbankDetails implements OnInit {
 
   constructor(
     private store: Store<{ qbank: QbankState }>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.qbank$ = this.store.select(selectCurrentQbank);
     this.loading$ = this.store.select(selectCurrentQbankLoading);
@@ -34,5 +36,9 @@ export class ViewQbankDetails implements OnInit {
     if (qbankId) {
       this.store.dispatch(loadQbankById({ qbankId }));
     }
+  }
+
+  on_back(): void {
+    this.location.back();
   }
 }

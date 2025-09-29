@@ -1,6 +1,10 @@
 <div class="qbank-details">
   <div class="qbank-details__header">
-    <h1 class="qbank-details__title-main">Quiz Bank Details</h1>
+    <div class="qbank-details__header-row">
+      <button type="button" class="qbank-details__back" (click)="on_back()" aria-label="Back to question banks">Back</button>
+      <h1 class="qbank-details__title-main">Quiz Bank Details</h1>
+      <div class="qbank-details__spacer"></div>
+    </div>
   </div>
 
   @if (loading$ | async) {
@@ -25,13 +29,17 @@
   } @else {
     <div class="qbank-details__content">
       @if (qbank$ | async; as qbank) {
-        <h2 class="qbank-details__title">{{ qbank.name }}</h2>
-        @if (qbank.category) {
-          <p class="qbank-details__info">Category: {{ qbank.category }}</p>
-        }
-        @if (qbank.createdAt) {
-          <p class="qbank-details__info">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</p>
-        }
+        <div class="qbank-details__meta">
+          <h2 class="qbank-details__title">{{ qbank.name }} </h2>
+          <div class="qbank-details__meta-row">
+            @if (qbank.category) {
+              <span class="qbank-details__chip">{{ qbank.category.charAt(0).toUpperCase() + qbank.category.slice(1) }} </span>
+            }
+            @if (qbank.createdAt) {
+              <span class="qbank-details__date">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</span>
+            }
+          </div>
+        </div>
 
         <div class="qbank-details__questions">
           @if (qbank.questions.length === 0) {

@@ -29,23 +29,45 @@ $success-color: #10b981;
     margin: 0;
   }
 
+  &__header-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__back {
+    justify-self: start;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background: #ffffff;
+    color: $primary-color;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  &__back:hover { box-shadow: $card-shadow; }
+  &__spacer { height: 1px; }
+
   &__content {
     width: 100%;
     max-width: 900px;
   }
 
+  &__meta { margin-bottom: 8px; }
+
   &__title {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 800;
     color: $primary-color;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
   }
 
-  &__info {
-    font-size: 0.95rem;
-    color: $inactive-color;
-    margin: 4px 0 0 0;
-  }
+  &__meta-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  &__chip { background: #eef2ff; color: $primary-color; border: 1px solid $border-color; padding: 4px 8px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; }
+  &__date { color: $inactive-color; font-size: 0.95rem; }
 
   &__questions {
     margin-top: 24px;
