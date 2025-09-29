@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter, map } from 'rxjs/operators';
 import { 
   QuizData, 
   QuizOption, 
@@ -16,6 +16,8 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { createQuizBank, clearError, resetQuizState } from '../../store/quiz.actions';
 import { selectIsLoading, selectErrorMessage, selectIsSuccess } from '../../store/quiz.selectors';
+import { loadQbankById, updateQbank, clearCurrentQbank, updateQbankSuccess } from '../../store/qbank.actions';
+import { selectCurrentQbank, selectCurrentQbankLoading } from '../../store/qbank.selectors';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -33,9 +35,15 @@ export class Createbank implements OnInit, OnDestroy {
     questions: []
   };
 
+  isEditMode: boolean = false;
+  currentQbankId: string | null = null;
+
   isLoading$: Observable<boolean>;
   errorMessage$: Observable<string | null>;
   isSuccess$: Observable<boolean>;
+  
+  currentQbank$: Observable<any>;
+  currentQbankLoading$: Observable<boolean>;
   
   successMessage: string = '';
   validationError: string = '';
@@ -43,24 +51,57 @@ export class Createbank implements OnInit, OnDestroy {
   private successTimeout?: number;
   private destroy$ = new Subject<void>();
 
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(
+    private store: Store<AppState>, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.isLoading$ = this.store.select(selectIsLoading);
     this.errorMessage$ = this.store.select(selectErrorMessage);
     this.isSuccess$ = this.store.select(selectIsSuccess);
-    this.addQuestion();
+    this.currentQbank$ = this.store.select(selectCurrentQbank);
+    this.currentQbankLoading$ = this.store.select(selectCurrentQbankLoading);
   }
 
   ngOnInit(): void {
     this.store.dispatch(resetQuizState());
+    this.store.dispatch(clearCurrentQbank());
     
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      if (params['mode'] === 'edit' && params['id']) {
+        this.isEditMode = true;
+        this.currentQbankId = params['id'];
+
+        this.store.dispatch(loadQbankById({ qbankId: params['id'] }));
+      } else {
+        this.isEditMode = false;
+        this.currentQbankId = null;
+        
+        if (this.quizData.questions.length === 0) {
+          this.addQuestion();
+        }
+      }
+    });
+
+    // Handle successful creation
     this.isSuccess$.pipe(takeUntil(this.destroy$)).subscribe(isSuccess => {
-      if (isSuccess) {
+      if (isSuccess && !this.isEditMode) {
         this.successMessage = 'Quiz bank created successfully!';
         this.successTimeout = setTimeout(() => {
           this.resetForm();
           this.successMessage = '';
           this.router.navigate(['/view-qbanks'])
         }, 1000); 
+      }
+    });
+
+    // Handle loading qbank for editing
+    this.currentQbank$.pipe(
+      takeUntil(this.destroy$),
+      filter(qbank => !!qbank)
+    ).subscribe(qbank => {
+      if (qbank && this.isEditMode) {
+        this.populateFormForEdit(qbank);
       }
     });
   }
@@ -72,6 +113,39 @@ export class Createbank implements OnInit, OnDestroy {
     if (this.successTimeout) {
       clearTimeout(this.successTimeout);
     }
+    
+    this.store.dispatch(clearCurrentQbank());
+  }
+
+  /**
+   * Populates the form with existing qbank data for editing
+   * @param qbank - The qbank data to populate the form with
+   */
+  private populateFormForEdit(qbank: any): void {
+    this.quizData = {
+      name: qbank.name,
+      category: qbank.category,
+      noOfQuestions: qbank.noOfQuestions,
+      status: qbank.status,
+      questions: qbank.questions || []
+    };
+    
+    // Ensure each question has proper structure
+    this.quizData.questions = this.quizData.questions.map(question => ({
+      description: question.description,
+      options: question.options.map((option: any, index: number) => ({
+        text: option.text,
+        isCorrect: option.isCorrect,
+        order: index
+      }))
+    }));
+    
+    // If no questions exist, add one default question
+    if (this.quizData.questions.length === 0) {
+      this.addQuestion();
+    }
+    
+    this.updateQuestionCount();
   }
 
   /**
@@ -302,8 +376,8 @@ export class Createbank implements OnInit, OnDestroy {
   }
 
   /**
-   * Submits the form to create the quiz bank
-   * Uses NgRx store to dispatch the action
+   * Submits the form to create or update the quiz bank
+   * Uses NgRx store to dispatch the appropriate action
    */
   onSubmit(): void {
     
@@ -329,6 +403,22 @@ export class Createbank implements OnInit, OnDestroy {
       }))
     };
 
-    this.store.dispatch(createQuizBank({ quizData: backendData }));
+    if (this.isEditMode && this.currentQbankId) {
+      // Update existing qbank
+      this.store.dispatch(updateQbank({ 
+        qbankId: this.currentQbankId, 
+        quizData: backendData 
+      }));
+      
+      // Show success message and navigate
+      this.successMessage = 'Quiz bank updated successfully!';
+      this.successTimeout = setTimeout(() => {
+        this.successMessage = '';
+        this.router.navigate(['/view-qbanks']);
+      }, 1000);
+    } else {
+      // Create new qbank
+      this.store.dispatch(createQuizBank({ quizData: backendData }));
+    }
   }
 }

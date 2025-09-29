@@ -1,3 +1,5 @@
+import { QuizQuestion } from './quiz.model';
+
 export interface Qbank {
   _id: string;
   id: string;
@@ -21,3 +23,7 @@ export interface Qbank {
  export interface FullQbank extends Qbank{
   questions:Question[];
  }
+
+export interface QbankWithQuestions extends Qbank {
+  questions: QuizQuestion[];
+}

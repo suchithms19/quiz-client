@@ -1,10 +1,16 @@
 <div class="createbank">
   <div class="createbank__header">
-    <h1 class="createbank__header-title">Create Quiz Bank</h1>
+    <h1 class="createbank__header-title">
+      {{ isEditMode ? 'Edit Quiz Bank' : 'Create Quiz Bank' }}
+    </h1>
   </div>
 
   <div class="createbank__container">
-    <form class="createbank__form" (ngSubmit)="onSubmit()" #quizForm="ngForm" novalidate>
+    <div *ngIf="isEditMode && (currentQbankLoading$ | async)" class="createbank__loading">
+      <p>Loading quiz bank data...</p>
+    </div>
+    
+    <form *ngIf="!isEditMode || !(currentQbankLoading$ | async)" class="createbank__form" (ngSubmit)="onSubmit()" #quizForm="ngForm" novalidate>
       
       <div class="createbank__section">
         <h2 class="createbank__section-title">Quiz Information</h2>
@@ -221,8 +227,12 @@
           <button 
             type="submit" 
             class="createbank__btn createbank__btn--primary">
-            <span *ngIf="isLoading$ | async">Creating...</span>
-            <span *ngIf="!(isLoading$ | async)">Create Quiz Bank</span>
+            <span *ngIf="(isLoading$ | async) || (currentQbankLoading$ | async)">
+              {{ isEditMode ? 'Updating...' : 'Creating...' }}
+            </span>
+            <span *ngIf="!((isLoading$ | async) || (currentQbankLoading$ | async))">
+              {{ isEditMode ? 'Update Quiz Bank' : 'Create Quiz Bank' }}
+            </span>
           </button>
         </div>
       </div>

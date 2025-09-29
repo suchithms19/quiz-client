@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { QbankState } from '../../store';
 import { selectQbankError, selectQbankLoading, selectQbanks } from '../../store/qbank.selectors';
@@ -7,7 +8,6 @@ import { Store } from '@ngrx/store';
 import { loadQbanks } from '../../store/qbank.actions';
 import { Qbank } from '../../models/qbank.model';
 import { MatTabsModule } from '@angular/material/tabs';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'qc-view-qbanks',
@@ -23,7 +23,10 @@ export class ViewQbanks implements OnInit {
 
   activeTab: 'active' | 'inactive' = 'active';
 
-  constructor(private store: Store<{ qbank: QbankState }>, private router: Router) {
+  constructor(
+    private store: Store<{ qbank: QbankState }>,
+    private router: Router
+  ) {
     this.qbanks$ = this.store.select(selectQbanks);
     this.loading$ = this.store.select(selectQbankLoading);
     this.error$ = this.store.select(selectQbankError);
@@ -38,5 +41,14 @@ export class ViewQbanks implements OnInit {
   }
   reviewQbank(qbankId: string): void {
     this.router.navigate(['/view-qbanks', qbankId]);
+  }
+
+  onModifyQbank(qbank: Qbank): void {
+    this.router.navigate(['/create-qbank'], {
+      queryParams: {
+        mode: 'edit',
+        id: qbank._id
+      }
+    });
   }
 }
