@@ -11,7 +11,11 @@ describe('Createbank Component Logic', () => {
   let component: Createbank;
 
   beforeEach(() => {
-    component = new Createbank(mockStore as any);
+    const mockRouter = { navigate: jest.fn() } as any;
+    const mockRoute = { queryParams: { pipe: jest.fn(() => ({ subscribe: jest.fn() })) } } as any;
+    const mockAiService = { generateQuestions: jest.fn() } as any;
+    component = new Createbank(mockStore as any, mockRouter, mockRoute, mockAiService);
+    component.addQuestion();
   });
 
   it('should remove question but keep minimum one', () => {

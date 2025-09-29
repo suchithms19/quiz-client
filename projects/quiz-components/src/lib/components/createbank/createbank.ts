@@ -340,8 +340,8 @@ export class Createbank implements OnInit, OnDestroy {
 
   openAiModal(): void {
     this.aiError = '';
-    this.aiPromptTopic = this.quizData.category || '';
-    this.aiPromptCount = Math.max(1, this.quizData.noOfQuestions || 5);
+    this.aiPromptTopic = this.quizData.name || '';
+    this.aiPromptCount = 5 ;
     this.aiModalOpen = true;
   }
 
