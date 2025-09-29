@@ -1,22 +1,68 @@
 import { createReducer, on } from "@ngrx/store";
-import { loadQbanks, loadQbanksSuccess, loadQbanksFailure } from "./qbank.actions";
-import { Qbank } from "../models/qbank.model";
+import { 
+    loadQbanks, 
+    loadQbanksSuccess, 
+    loadQbanksFailure,
+    loadQbankById,
+    loadQbankByIdSuccess,
+    loadQbankByIdFailure,
+    updateQbank,
+    updateQbankSuccess,
+    updateQbankFailure,
+    clearCurrentQbank
+} from "./qbank.actions";
+import { Qbank, QbankWithQuestions } from "../models/qbank.model";
 
 export interface QbankState {
     qbanks: Qbank[];
+    currentQbank: QbankWithQuestions | null; // For editing
     loading: boolean;
+    currentQbankLoading: boolean; // Separate loading state for current qbank
     error: any;
 }
 
 export const initialState: QbankState = {
     qbanks: [],
+    currentQbank: null,
     loading: false,
+    currentQbankLoading: false,
     error: null
 };
 
 export const qbankReducer = createReducer(
     initialState,
-    on(loadQbanks, (state) => ({ ...state, loading: true })),
+    
+    on(loadQbanks, (state) => ({ ...state, loading: true, error: null })),
     on(loadQbanksSuccess, (state, { qbanks }) => ({ ...state, qbanks, loading: false })),
-    on(loadQbanksFailure, (state, { error }) => ({ ...state, error, loading: false }))
+    on(loadQbanksFailure, (state, { error }) => ({ ...state, error, loading: false })),
+    
+    
+    on(loadQbankById, (state) => ({ ...state, currentQbankLoading: true, error: null })),
+    on(loadQbankByIdSuccess, (state, { qbank }) => ({ 
+        ...state, 
+        currentQbank: qbank, 
+        currentQbankLoading: false 
+    })),
+    on(loadQbankByIdFailure, (state, { error }) => ({ 
+        ...state, 
+        error, 
+        currentQbankLoading: false 
+    })),
+    
+    
+    on(updateQbank, (state) => ({ ...state, currentQbankLoading: true, error: null })),
+    on(updateQbankSuccess, (state, { qbank }) => ({ 
+        ...state, 
+        currentQbankLoading: false,
+        
+        qbanks: state.qbanks.map(q => q._id === qbank.id ? { ...q, ...qbank } : q)
+    })),
+    on(updateQbankFailure, (state, { error }) => ({ 
+        ...state, 
+        error, 
+        currentQbankLoading: false 
+    })),
+    
+    
+    on(clearCurrentQbank, (state) => ({ ...state, currentQbank: null }))
 );

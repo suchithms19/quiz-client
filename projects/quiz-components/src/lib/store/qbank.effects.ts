@@ -1,15 +1,27 @@
 import { createEffect, ofType, Actions } from "@ngrx/effects";
 import { catchError, map, mergeMap } from "rxjs/operators";
-import { loadQbanks, loadQbanksSuccess, loadQbanksFailure } from "./qbank.actions";
+import { 
+    loadQbanks, 
+    loadQbanksSuccess, 
+    loadQbanksFailure,
+    loadQbankById,
+    loadQbankByIdSuccess,
+    loadQbankByIdFailure,
+    updateQbank,
+    updateQbankSuccess,
+    updateQbankFailure
+} from "./qbank.actions";
 import { Qbank } from "../models/qbank.model";
 import { HttpClient } from "@angular/common/http";
 import { of } from "rxjs";
 import { Injectable, inject } from "@angular/core";
+import { QuizService } from "../services/quiz.service";
 
 @Injectable()
 export class QbankEffects {
     private actions$ = inject(Actions);
     private http = inject(HttpClient);
+    private quizService = inject(QuizService);
 
     loadQbanks$ = createEffect(() => 
         this.actions$.pipe(
@@ -22,4 +34,28 @@ export class QbankEffects {
             )
           )
         );
+
+    loadQbankById$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(loadQbankById),
+            mergeMap(({ qbankId }) =>
+                this.quizService.getQbankById(qbankId).pipe(
+                    map((qbank) => loadQbankByIdSuccess({ qbank })),
+                    catchError((error) => of(loadQbankByIdFailure({ error: error.message })))
+                )
+            )
+        )
+    );
+
+    updateQbank$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(updateQbank),
+            mergeMap(({ qbankId, quizData }) =>
+                this.quizService.updateQuizBank(qbankId, quizData).pipe(
+                    map((qbank) => updateQbankSuccess({ qbank })),
+                    catchError((error) => of(updateQbankFailure({ error: error.message })))
+                )
+            )
+        )
+    );
 }

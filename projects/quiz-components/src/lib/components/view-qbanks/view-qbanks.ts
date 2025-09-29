@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { QbankState } from '../../store';
 import { selectQbankError, selectQbankLoading, selectQbanks } from '../../store/qbank.selectors';
@@ -22,7 +23,10 @@ export class ViewQbanks implements OnInit {
 
   activeTab: 'active' | 'inactive' = 'active';
 
-  constructor(private store: Store<{ qbank: QbankState }>) {
+  constructor(
+    private store: Store<{ qbank: QbankState }>,
+    private router: Router
+  ) {
     this.qbanks$ = this.store.select(selectQbanks);
     this.loading$ = this.store.select(selectQbankLoading);
     this.error$ = this.store.select(selectQbankError);
@@ -34,5 +38,14 @@ export class ViewQbanks implements OnInit {
   
   setTab(tab: 'active' | 'inactive'): void {
     this.activeTab = tab;
+  }
+
+  onModifyQbank(qbank: Qbank): void {
+    this.router.navigate(['/create-qbank'], {
+      queryParams: {
+        mode: 'edit',
+        id: qbank._id
+      }
+    });
   }
 }
