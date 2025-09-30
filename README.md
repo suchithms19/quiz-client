@@ -146,13 +146,12 @@ quiz-client/
 │   │   │   ├── quiz.reducer.ts  # Reducers
 │   │   │   ├── quiz.selectors.ts# Selectors
 │   │   │   └── quiz.state.ts    # State interface
-│   │   ├── types/               # TypeScript interfaces
+│   │   ├── models/              # TypeScript interfaces and data models
 │   │   │   └── quiz.model.ts    # Data models
 │   │   └── environments/        # Environment configs
 │   └── public-api.ts            # Library exports
 ├── dist/                        # Build output
 ├── public/                      # Static assets
-├── docker/                      # Docker configuration
 ├── Dockerfile                   # Docker build file
 ├── nginx.conf                   # nginx configuration
 ├── jest.config.js              # Jest configuration
