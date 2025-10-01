@@ -186,7 +186,11 @@
     gap: 8px;
 
     input[type="radio"] {
-      display: none;
+      position: absolute;
+      opacity: 0.001;
+      width: 20px;
+      height: 20px;
+      margin: 0;
     }
 
     .radio-custom {
@@ -217,6 +221,11 @@
       &::after {
         transform: translate(-50%, -50%) scale(1);
       }
+    }
+
+    input[type="radio"]:focus + .radio-custom {
+      outline: 2px solid #4338ca;
+      outline-offset: 2px;
     }
   }
 
@@ -569,6 +578,11 @@
       min-height: 32px;
       border: 1px solid transparent;
 
+    &:focus {
+      outline: 2px solid #4338ca;
+      outline-offset: 2px;
+    }
+
       &:hover {
         background-color: #f3f4f6;
         color: #240f6e;
@@ -735,6 +749,18 @@
       min-width: 100px;
     }
   }
+}
+
+// Utility: Visually Hidden (for screen readers)
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
 }
 
 @keyframes fadeIn {

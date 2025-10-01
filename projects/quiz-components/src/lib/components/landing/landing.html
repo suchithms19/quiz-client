@@ -1,6 +1,6 @@
 <div class="analytics">
   <div class="analytics__header">
-    <h1 class="analytics__title-main">Dashboard</h1>
+    <h1 class="analytics__title-main" tabindex="0">Dashboard</h1>
   </div>
 
   @if (isLoading) {
@@ -27,9 +27,9 @@
       }
     </div>
   } @else if (error) {
-    <div class="error">
+    <div class="error" role="alert" aria-live="assertive">
       <div class="error__content">
-        <h3>Something went wrong</h3>
+        <h3 tabindex="0" aria-label="Something went wrong" >Something went wrong</h3>
         <p>{{ error }}</p>
         <button (click)="refreshAnalytics()" class="error__retry">Try Again</button>
       </div>
@@ -39,21 +39,21 @@
       <div class="analytics__overview">
         <div class="analytics__card">
           <div class="analytics__card-header">
-            <h3 class="analytics__card-title">Total Quizzes</h3>
+            <h3 class="analytics__card-title" tabindex="0">Total Quizzes</h3>
           </div>
           <div class="analytics__card-value">{{ analytics.totals.totalQuizzes }}</div>
         </div>
         
         <div class="analytics__card">
           <div class="analytics__card-header">
-            <h3 class="analytics__card-title">Active Quizzes</h3>
+            <h3 class="analytics__card-title" tabindex="0">Active Quizzes</h3>
           </div>
           <div class="analytics__card-value analytics__card-value--success">{{ analytics.totals.activeQuizzes }}</div>
         </div>
         
         <div class="analytics__card">
           <div class="analytics__card-header">
-            <h3 class="analytics__card-title">Total Questions</h3>
+            <h3 class="analytics__card-title" tabindex="0">Total Questions</h3>
           </div>
           <div class="analytics__card-value">{{ analytics.totals.totalQuestions }}</div>
         </div>
@@ -62,10 +62,10 @@
       <div class="analytics__status">
          @for (status of analytics.statusBreakdown; track status.status) {
            <div class="analytics__status-card">
-             <div class="analytics__status-label">
+             <div class="analytics__status-label" tabindex="0" [attr.aria-label]="'Status: ' + (status.status | titlecase)">
                {{ status.status | titlecase }}
              </div>
-             <div class="analytics__status-value">{{ status.count }}</div>
+             <div class="analytics__status-value" tabindex="0" [attr.aria-label]="'Number of ' + (status.status | titlecase) + ' quizzes'">{{ status.count }}</div>
            </div>
          }
        </div>

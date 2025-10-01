@@ -1,22 +1,22 @@
-<div class="createbank">
+<div class="createbank" role="main">
   <div class="createbank__header">
     <h1 class="createbank__header-title">
       {{ isEditMode ? 'Edit Quiz Bank' : 'Create Quiz Bank' }}
     </h1>
   </div>
 
-  <div class="createbank__container">
+  <div class="createbank__container" aria-labelledby="createbank_title">
     <div *ngIf="isEditMode && (currentQbankLoading$ | async)" class="createbank__loading">
       <p>Loading quiz bank data...</p>
     </div>
     
-    <form *ngIf="!isEditMode || !(currentQbankLoading$ | async)" class="createbank__form" (ngSubmit)="onSubmit()" #quizForm="ngForm" novalidate>
+    <form *ngIf="!isEditMode || !(currentQbankLoading$ | async)" class="createbank__form" (ngSubmit)="onSubmit()" #quizForm="ngForm" novalidate aria-describedby="form_required_hint">
       
       <div class="createbank__section">
-        <h2 class="createbank__section-title">Quiz Information</h2>
+        <h2 id="createbank_title" class="createbank__section-title">Quiz Information</h2>
         
         <div class="createbank__form-group">
-          <label for="quiz_name" class="createbank__form-group-label">Quiz Name <span style="color: red;">*</span> </label>
+          <label for="quiz_name" class="createbank__form-group-label">Quiz Name <span style="color: red;" aria-hidden="true">*</span> </label>
           <input 
             type="text" 
             id="quiz_name" 
@@ -26,14 +26,16 @@
             placeholder="Enter quiz name"
             class="createbank__input"
             #quizNameInput="ngModel"
+            [attr.aria-invalid]="quizNameInput.invalid && quizNameInput.touched ? true : null"
+            [attr.aria-describedby]="quizNameInput.invalid && quizNameInput.touched ? 'quiz_name_error' : 'form_required_hint'"
             [class.createbank__input--error]="quizNameInput.invalid && quizNameInput.touched">
-          <div class="createbank__error-message" *ngIf="quizNameInput.invalid && quizNameInput.touched">
+          <div id="quiz_name_error" class="createbank__error-message" *ngIf="quizNameInput.invalid && quizNameInput.touched" role="alert">
             <span *ngIf="quizNameInput.errors?.['required']">Quiz name is required</span>
           </div>
         </div>
         
         <div class="createbank__form-group">
-          <label for="category" class="createbank__form-group-label">Category <span style="color: red;">*</span> </label>
+          <label for="category" class="createbank__form-group-label">Category <span style="color: red;" aria-hidden="true">*</span> </label>
           <select 
             id="category" 
             name="category"
@@ -41,6 +43,8 @@
             required
             class="createbank__input"
             #categoryInput="ngModel"
+            [attr.aria-invalid]="categoryInput.invalid && categoryInput.touched ? true : null"
+            [attr.aria-describedby]="categoryInput.invalid && categoryInput.touched ? 'category_error' : 'form_required_hint'"
             [class.createbank__input--error]="categoryInput.invalid && categoryInput.touched">
             <option value="">Select a category</option>
             <option value="programming">Programming</option>
@@ -51,7 +55,7 @@
             <option value="general">General Knowledge</option>
             <option value="other">Other</option>
           </select>
-          <div class="createbank__error-message" *ngIf="categoryInput.invalid && categoryInput.touched">
+          <div id="category_error" class="createbank__error-message" *ngIf="categoryInput.invalid && categoryInput.touched" role="alert">
             <span *ngIf="categoryInput.errors?.['required']">Please select a category</span>
           </div>
         </div>
@@ -114,7 +118,7 @@
             </div>
 
             <div class="createbank__form-group">
-              <label [for]="'question_' + questionIndex" class="createbank__form-group-label">Question Text <span style="color: red;">*</span></label>
+              <label [for]="'question_' + questionIndex" class="createbank__form-group-label">Question Text <span style="color: red;" aria-hidden="true">*</span></label>
               <textarea 
                 [id]="'question_' + questionIndex"
                 [name]="'question_' + questionIndex"
@@ -124,24 +128,31 @@
                 class="createbank__textarea"
                 rows="3"
                 #questionInput="ngModel"
+                [attr.aria-invalid]="questionInput.invalid && questionInput.touched ? true : null"
+                [attr.aria-describedby]="(questionInput.invalid && questionInput.touched ? ('question_error_' + questionIndex + ' ') : '') + ('question_req_' + questionIndex)"
                 [class.createbank__textarea--error]="questionInput.invalid && questionInput.touched"></textarea>
-              <div class="createbank__error-message" *ngIf="questionInput.invalid && questionInput.touched">
+              <div class="visually-hidden" [id]="'question_req_' + questionIndex">
+                {{ !(question.description || '').trim() ? ('Question ' + (questionIndex + 1) + ' is required') : '' }}
+              </div>
+              <div [id]="'question_error_' + questionIndex" class="createbank__error-message" *ngIf="questionInput.invalid && questionInput.touched" role="alert">
                 <span *ngIf="questionInput.errors?.['required']">Question text is required</span>
               </div>
             </div>
 
             <div class="options-section">
-              <h4>Options</h4>
+              <h4 id="options_heading_{{questionIndex}}">Options</h4>
               
               <div 
                 class="options-container"
                 cdkDropList 
+                role="list"
+                [attr.aria-labelledby]="'options_heading_' + questionIndex"
                 (cdkDropListDropped)="onOptionDrop($event, questionIndex)">
                 
                 <div 
                   class="option-item" 
                   *ngFor="let option of question.options; let optionIndex = index; trackBy: trackByIndex"
-                  cdkDrag>
+                  cdkDrag role="listitem">
                   
                   <div class="option-input-group">
                   <label class="radio-label" [attr.for]="'correct_' + questionIndex + '_' + optionIndex" (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
@@ -150,10 +161,12 @@
                       [id]="'correct_' + questionIndex + '_' + optionIndex"
                       [name]="'correct_' + questionIndex" 
                       [checked]="option.isCorrect"
+                      [attr.aria-checked]="option.isCorrect"
+                      [attr.aria-label]="'Mark option ' + getOptionLabel(optionIndex).toUpperCase() + ' as correct for question ' + (questionIndex + 1)"
                       (change)="setCorrectOption(questionIndex, optionIndex)"
                       (mousedown)="$event.stopPropagation()"
                       (click)="$event.stopPropagation()">
-                    <span class="radio-custom"></span>
+                    <span class="radio-custom" aria-hidden="true"></span>
                   </label>
                    <div class="option-label">{{ getOptionLabel(optionIndex).toUpperCase() }}</div>
                   
@@ -167,11 +180,16 @@
                       placeholder="Enter answer option..."
                       class="createbank__input option-text"
                       #optionInput="ngModel"
+                      [attr.aria-invalid]="optionInput.invalid && optionInput.touched ? true : null"
+                      [attr.aria-describedby]="(optionInput.invalid && optionInput.touched ? ('option_error_' + questionIndex + '_' + optionIndex + ' ') : '') + ('option_req_' + questionIndex + '_' + optionIndex)"
                       [class.createbank__input--error]="optionInput.invalid && optionInput.touched"
                       (mousedown)="$event.stopPropagation()"
                       (click)="$event.stopPropagation()"
                       cdkDragDisabled>
-                    <div class="createbank__error-message createbank__error-message--option" *ngIf="optionInput.invalid && optionInput.touched">
+                    <div class="visually-hidden" [id]="'option_req_' + questionIndex + '_' + optionIndex">
+                      {{ !(option.text || '').trim() ? ('Option ' + (optionIndex + 1) + ' is required') : '' }}
+                    </div>
+                    <div [id]="'option_error_' + questionIndex + '_' + optionIndex" class="createbank__error-message createbank__error-message--option" *ngIf="optionInput.invalid && optionInput.touched" role="alert">
                       <span *ngIf="optionInput.errors?.['required']">Option text is required</span>
                     </div>
                   </div>
@@ -186,8 +204,8 @@
                   </button>
                   
                   <!-- Drag Handle -->
-                  <div class="drag-handle" cdkDragHandle>
-                    <span class="drag-icon">⋮⋮</span>
+                  <div class="drag-handle" cdkDragHandle tabindex="0" role="button" aria-label="Reorder option">
+                    <span class="drag-icon" aria-hidden="true">⋮⋮</span>
                   </div>
                 </div>
               </div>
@@ -211,14 +229,14 @@
 
       <div class="createbank__section submit-section">
         <!-- Status Messages -->
-        <div class="createbank__status">
-          <div class="createbank__status-success" *ngIf="successMessage">
+        <div class="createbank__status" aria-live="polite">
+          <div class="createbank__status-success" *ngIf="successMessage" role="status">
             {{ successMessage }}
           </div>
-          <div class="createbank__status-error" *ngIf="validationError">
+          <div class="createbank__status-error" *ngIf="validationError" role="alert">
             {{ validationError }}
           </div>
-          <div class="createbank__status-error" *ngIf="errorMessage$ | async as errorMessage">
+          <div class="createbank__status-error" *ngIf="errorMessage$ | async as errorMessage" role="alert">
             {{ errorMessage }}
           </div>
         </div>
@@ -246,14 +264,14 @@
   </div>
 </div>
 
-<div class="confirmation-modal" *ngIf="showConfirmation" (click)="closeConfirmation()">
+<div class="confirmation-modal" *ngIf="showConfirmation" (click)="closeConfirmation()" role="dialog" aria-modal="true" aria-labelledby="confirm_reset_title" aria-describedby="confirm_reset_desc">
   <div class="confirmation-modal__content" (click)="$event.stopPropagation()">
     <div class="confirmation-modal__header">
-      <h3>Confirm Reset</h3>
-      <button class="confirmation-modal__close" (click)="closeConfirmation()">&times;</button>
+      <h3 id="confirm_reset_title">Confirm Reset</h3>
+      <button class="confirmation-modal__close" (click)="closeConfirmation()" aria-label="Close dialog">&times;</button>
     </div>
     <div class="confirmation-modal__body">
-      <p>Are you sure you want to reset the form? All your progress will be lost.</p>
+      <p id="confirm_reset_desc">Are you sure you want to reset the form? All your progress will be lost.</p>
     </div>
     <div class="confirmation-modal__footer">
       <button class="createbank__btn createbank__btn--secondary" (click)="closeConfirmation()">
@@ -267,13 +285,14 @@
 </div>
 
 <!-- AI Generation Modal -->
-<div class="confirmation-modal" *ngIf="aiModalOpen" (click)="closeAiModal()">
+<div class="confirmation-modal" *ngIf="aiModalOpen" (click)="closeAiModal()" role="dialog" aria-modal="true" aria-labelledby="ai_modal_title" aria-describedby="ai_modal_desc">
   <div class="confirmation-modal__content" (click)="$event.stopPropagation()">
     <div class="confirmation-modal__header">
-      <h3>Generate Questions with AI</h3>
-      <button class="confirmation-modal__close" (click)="closeAiModal()" [disabled]="aiIsGenerating">&times;</button>
+      <h3 id="ai_modal_title">Generate Questions with AI</h3>
+      <button class="confirmation-modal__close" (click)="closeAiModal()" [disabled]="aiIsGenerating" aria-label="Close dialog">&times;</button>
     </div>
     <div class="confirmation-modal__body">
+      <div id="ai_modal_desc" class="visually-hidden">Provide a topic and number of questions to generate.</div>
       <div class="createbank__form-group">
         <label for="ai_topic" class="createbank__form-group-label">Topic</label>
         <input id="ai_topic" class="createbank__input" [(ngModel)]="aiPromptTopic" name="ai_topic" placeholder="e.g. Arrays in JavaScript" />
@@ -282,7 +301,7 @@
         <label for="ai_count" class="createbank__form-group-label">Number of questions</label>
         <input id="ai_count" type="number" min="1" max="20" class="createbank__input" [(ngModel)]="aiPromptCount" name="ai_count" />
       </div>
-      <div class="createbank__status-error" *ngIf="aiError">{{ aiError }}</div>
+      <div class="createbank__status-error" *ngIf="aiError" role="alert">{{ aiError }}</div>
     </div>
     <div class="confirmation-modal__footer">
       <button class="createbank__btn createbank__btn--secondary" (click)="closeAiModal()" [disabled]="aiIsGenerating">Cancel</button>
@@ -293,3 +312,5 @@
     </div>
   </div>
 </div>
+
+<div id="form_required_hint" class="visually-hidden">Fields marked with an asterisk are required.</div>
