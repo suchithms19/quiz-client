@@ -38,7 +38,7 @@ export class ViewQbankDetails implements OnInit {
     }
   }
 
-  on_back(): void {
+  onBack(): void {
     this.location.back();
   }
 }

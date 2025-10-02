@@ -1,8 +1,8 @@
 <div class="qbank-details">
   <div class="qbank-details__header">
     <div class="qbank-details__header-row">
-      <button type="button" class="qbank-details__back" (click)="on_back()" aria-label="Back to question banks">Back</button>
-      <h1 class="qbank-details__title-main">{{(qbank$|async)?.name}}</h1>
+      <button type="button" class="qbank-details__back" (click)="onBack()" aria-label="Back to question banks">Back</button>
+      <h1 class="qbank-details__title-main" tabindex="0" aria-label="Quiz Bank Name: {{(qbank$|async)?.name}}" >{{(qbank$|async)?.name}}</h1>
       <div class="qbank-details__spacer"></div>
     </div>
   </div>
@@ -32,10 +32,10 @@
         <div class="qbank-details__meta">
           <div class="qbank-details__meta-row">
             @if (qbank.category) {
-              <span class="qbank-details__chip">{{ qbank.category.charAt(0).toUpperCase() + qbank.category.slice(1) }} </span>
+              <span class="qbank-details__chip" tabindex="0" aria-label="Category: {{ qbank.category.charAt(0).toUpperCase() + qbank.category.slice(1) }}">{{ qbank.category.charAt(0).toUpperCase() + qbank.category.slice(1) }} </span>
             }
             @if (qbank.createdAt) {
-              <span class="qbank-details__date">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</span>
+              <span class="qbank-details__date" tabindex="0" aria-label="Published date: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}">Published: {{ qbank.createdAt | date: 'MMM d, yyyy, h:mm a' }}</span>
             }
           </div>
         </div>
@@ -48,7 +48,7 @@
             </div>
           } @else {
             @for (question of qbank.questions; track i; let i = $index) {
-              <div class="qbank-details__question-card">
+              <div class="qbank-details__question-card" role="group" tabindex="0" aria-label="Question {{ i + 1 }}">
                 <p class="qbank-details__question-text">{{ i + 1 }}. {{ question.description }}</p>
                 <ul class="qbank-details__options">
                   @for (option of question.options; track $index; let j = $index) {
